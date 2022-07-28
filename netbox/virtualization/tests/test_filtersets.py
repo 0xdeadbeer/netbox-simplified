@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from dcim.models import DeviceRole, Platform, Region, Site, SiteGroup
-from ipam.models import IPAddress, VRF
 from tenancy.models import Tenant, TenantGroup
 from utilities.testing import ChangeLoggedFilterSetTests
 from virtualization.choices import *
@@ -277,15 +276,6 @@ class VirtualMachineTestCase(TestCase, ChangeLoggedFilterSetTests):
         )
         VMInterface.objects.bulk_create(interfaces)
 
-        # Assign primary IPs for filtering
-        ipaddresses = (
-            IPAddress(address='192.0.2.1/24', assigned_object=interfaces[0]),
-            IPAddress(address='192.0.2.2/24', assigned_object=interfaces[1]),
-        )
-        IPAddress.objects.bulk_create(ipaddresses)
-        VirtualMachine.objects.filter(pk=vms[0].pk).update(primary_ip4=ipaddresses[0])
-        VirtualMachine.objects.filter(pk=vms[1].pk).update(primary_ip4=ipaddresses[1])
-
     def test_name(self):
         params = {'name': ['Virtual Machine 1', 'Virtual Machine 2']}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
@@ -397,43 +387,6 @@ class VMInterfaceTestCase(TestCase, ChangeLoggedFilterSetTests):
     queryset = VMInterface.objects.all()
     filterset = VMInterfaceFilterSet
 
-    @classmethod
-    def setUpTestData(cls):
-
-        cluster_types = (
-            ClusterType(name='Cluster Type 1', slug='cluster-type-1'),
-            ClusterType(name='Cluster Type 2', slug='cluster-type-2'),
-            ClusterType(name='Cluster Type 3', slug='cluster-type-3'),
-        )
-        ClusterType.objects.bulk_create(cluster_types)
-
-        clusters = (
-            Cluster(name='Cluster 1', type=cluster_types[0]),
-            Cluster(name='Cluster 2', type=cluster_types[1]),
-            Cluster(name='Cluster 3', type=cluster_types[2]),
-        )
-        Cluster.objects.bulk_create(clusters)
-
-        vrfs = (
-            VRF(name='VRF 1', rd='65000:1'),
-            VRF(name='VRF 2', rd='65000:2'),
-            VRF(name='VRF 3', rd='65000:3'),
-        )
-        VRF.objects.bulk_create(vrfs)
-
-        vms = (
-            VirtualMachine(name='Virtual Machine 1', cluster=clusters[0]),
-            VirtualMachine(name='Virtual Machine 2', cluster=clusters[1]),
-            VirtualMachine(name='Virtual Machine 3', cluster=clusters[2]),
-        )
-        VirtualMachine.objects.bulk_create(vms)
-
-        interfaces = (
-            VMInterface(virtual_machine=vms[0], name='Interface 1', enabled=True, mtu=100, mac_address='00-00-00-00-00-01', vrf=vrfs[0], description='foobar1'),
-            VMInterface(virtual_machine=vms[1], name='Interface 2', enabled=True, mtu=200, mac_address='00-00-00-00-00-02', vrf=vrfs[1], description='foobar2'),
-            VMInterface(virtual_machine=vms[2], name='Interface 3', enabled=False, mtu=300, mac_address='00-00-00-00-00-03', vrf=vrfs[2]),
-        )
-        VMInterface.objects.bulk_create(interfaces)
 
     def test_name(self):
         params = {'name': ['Interface 1', 'Interface 2']}
@@ -486,12 +439,6 @@ class VMInterfaceTestCase(TestCase, ChangeLoggedFilterSetTests):
         params = {'mac_address': ['00-00-00-00-00-01', '00-00-00-00-00-02']}
         self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
-    def test_vrf(self):
-        vrfs = VRF.objects.all()[:2]
-        params = {'vrf_id': [vrfs[0].pk, vrfs[1].pk]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
-        params = {'vrf': [vrfs[0].rd, vrfs[1].rd]}
-        self.assertEqual(self.filterset(params, self.queryset).qs.count(), 2)
 
     def test_description(self):
         params = {'description': ['foobar1', 'foobar2']}

@@ -38,6 +38,7 @@ def render_field(field, bulk_nullable=False, label=None):
     """
     Render a single form field from template
     """
+    print (field)
     return {
         'field': field,
         'label': label,

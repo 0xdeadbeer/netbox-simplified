@@ -6,14 +6,12 @@ from dcim.choices import *
 from dcim.constants import *
 from dcim.models import *
 from extras.forms import LocalConfigContextFilterForm
-from ipam.models import ASN, VRF
 from netbox.forms import NetBoxModelFilterSetForm
 from tenancy.forms import ContactModelFilterForm, TenancyFilterForm
 from utilities.forms import (
     APISelectMultiple, add_blank_choice, ColorField, DynamicModelMultipleChoiceField, FilterForm, MultipleChoiceField,
     StaticSelect, TagFilterField, BOOLEAN_WITH_BLANK_CHOICES, SelectSpeedWidget,
 )
-from wireless.choices import *
 
 __all__ = (
     'CableFilterForm',
@@ -1008,16 +1006,6 @@ class InterfaceFilterForm(DeviceComponentFilterForm):
     wwn = forms.CharField(
         required=False,
         label='WWN'
-    )
-    rf_role = MultipleChoiceField(
-        choices=WirelessRoleChoices,
-        required=False,
-        label='Wireless role'
-    )
-    rf_channel = MultipleChoiceField(
-        choices=WirelessChannelChoices,
-        required=False,
-        label='Wireless channel'
     )
     rf_channel_frequency = forms.IntegerField(
         required=False,

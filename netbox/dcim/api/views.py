@@ -11,11 +11,9 @@ from rest_framework.response import Response
 from rest_framework.routers import APIRootView
 from rest_framework.viewsets import ViewSet
 
-from circuits.models import Circuit
 from dcim import filtersets
 from dcim.models import *
 from extras.api.views import ConfigContextQuerySetMixin
-from ipam.models import Prefix, VLAN
 from netbox.api.authentication import IsAuthenticatedOrLoginNotRequired
 from netbox.api.exceptions import ServiceUnavailable
 from netbox.api.metadata import ContentTypeMetadata

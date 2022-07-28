@@ -6,7 +6,6 @@ from timezone_field import TimeZoneFormField
 from dcim.choices import *
 from dcim.constants import *
 from dcim.models import *
-from ipam.models import ASN, VLAN, VLANGroup, VRF
 from netbox.forms import NetBoxModelBulkEditForm
 from tenancy.models import Tenant
 from utilities.forms import (
@@ -108,11 +107,6 @@ class SiteBulkEditForm(NetBoxModelBulkEditForm):
     )
     tenant = DynamicModelChoiceField(
         queryset=Tenant.objects.all(),
-        required=False
-    )
-    asns = DynamicModelMultipleChoiceField(
-        queryset=ASN.objects.all(),
-        label=_('ASNs'),
         required=False
     )
     contact_name = forms.CharField(

@@ -9,7 +9,6 @@ class Migration(migrations.Migration):
         ('dcim', '0002_auto_20160622_1821'),
         ('virtualization', '0001_virtualization'),
         ('contenttypes', '0002_remove_content_type_name'),
-        ('ipam', '0001_initial'),
         ('tenancy', '0001_initial'),
         ('extras', '0002_custom_fields'),
     ]
@@ -149,18 +148,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='interface',
-            name='tagged_vlans',
-            field=models.ManyToManyField(blank=True, related_name='interfaces_as_tagged', to='ipam.VLAN'),
-        ),
-        migrations.AddField(
-            model_name='interface',
             name='tags',
             field=taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag'),
-        ),
-        migrations.AddField(
-            model_name='interface',
-            name='untagged_vlan',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='interfaces_as_untagged', to='ipam.vlan'),
         ),
         migrations.AddField(
             model_name='frontporttemplate',
@@ -251,16 +240,6 @@ class Migration(migrations.Migration):
             model_name='device',
             name='platform',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='devices', to='dcim.platform'),
-        ),
-        migrations.AddField(
-            model_name='device',
-            name='primary_ip4',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='primary_ip4_for', to='ipam.ipaddress'),
-        ),
-        migrations.AddField(
-            model_name='device',
-            name='primary_ip6',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='primary_ip6_for', to='ipam.ipaddress'),
         ),
         migrations.AddField(
             model_name='device',
@@ -371,16 +350,6 @@ class Migration(migrations.Migration):
             model_name='cable',
             name='tags',
             field=taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag'),
-        ),
-        migrations.AddField(
-            model_name='cable',
-            name='termination_a_type',
-            field=models.ForeignKey(limit_choices_to=models.Q(models.Q(models.Q(('app_label', 'circuits'), ('model__in', ('circuittermination',))), models.Q(('app_label', 'dcim'), ('model__in', ('consoleport', 'consoleserverport', 'frontport', 'interface', 'powerfeed', 'poweroutlet', 'powerport', 'rearport'))), _connector='OR')), on_delete=django.db.models.deletion.PROTECT, related_name='+', to='contenttypes.contenttype'),
-        ),
-        migrations.AddField(
-            model_name='cable',
-            name='termination_b_type',
-            field=models.ForeignKey(limit_choices_to=models.Q(models.Q(models.Q(('app_label', 'circuits'), ('model__in', ('circuittermination',))), models.Q(('app_label', 'dcim'), ('model__in', ('consoleport', 'consoleserverport', 'frontport', 'interface', 'powerfeed', 'poweroutlet', 'powerport', 'rearport'))), _connector='OR')), on_delete=django.db.models.deletion.PROTECT, related_name='+', to='contenttypes.contenttype'),
         ),
         migrations.AlterUniqueTogether(
             name='rearporttemplate',

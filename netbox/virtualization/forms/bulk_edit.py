@@ -3,7 +3,6 @@ from django import forms
 from dcim.choices import InterfaceModeChoices
 from dcim.constants import INTERFACE_MTU_MAX, INTERFACE_MTU_MIN
 from dcim.models import DeviceRole, Platform, Region, Site, SiteGroup
-from ipam.models import VLAN, VLANGroup, VRF
 from netbox.forms import NetBoxModelBulkEditForm
 from tenancy.models import Tenant
 from utilities.forms import (
@@ -183,12 +182,10 @@ class VMInterfaceBulkEditForm(NetBoxModelBulkEditForm):
         widget=StaticSelect()
     )
     vlan_group = DynamicModelChoiceField(
-        queryset=VLANGroup.objects.all(),
         required=False,
         label='VLAN group'
     )
     untagged_vlan = DynamicModelChoiceField(
-        queryset=VLAN.objects.all(),
         required=False,
         query_params={
             'group_id': '$vlan_group',
@@ -196,7 +193,6 @@ class VMInterfaceBulkEditForm(NetBoxModelBulkEditForm):
         label='Untagged VLAN'
     )
     tagged_vlans = DynamicModelMultipleChoiceField(
-        queryset=VLAN.objects.all(),
         required=False,
         query_params={
             'group_id': '$vlan_group',
@@ -204,7 +200,6 @@ class VMInterfaceBulkEditForm(NetBoxModelBulkEditForm):
         label='Tagged VLANs'
     )
     vrf = DynamicModelChoiceField(
-        queryset=VRF.objects.all(),
         required=False,
         label='VRF'
     )

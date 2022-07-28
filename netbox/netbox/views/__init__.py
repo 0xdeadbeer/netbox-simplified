@@ -15,19 +15,16 @@ from django.views.generic import View
 from packaging import version
 from sentry_sdk import capture_message
 
-from circuits.models import Circuit, Provider
 from dcim.models import (
     Cable, ConsolePort, Device, DeviceType, Interface, PowerPanel, PowerFeed, PowerPort, Rack, Site,
 )
 from extras.models import ObjectChange
 from extras.tables import ObjectChangeTable
-from ipam.models import Aggregate, IPAddress, IPRange, Prefix, VLAN, VRF
 from netbox.constants import SEARCH_MAX_RESULTS
 from netbox.forms import SearchForm
 from netbox.search import SEARCH_TYPES
 from tenancy.models import Tenant
 from virtualization.models import Cluster, VirtualMachine
-from wireless.models import WirelessLAN, WirelessLink
 
 
 class HomeView(View):
@@ -58,19 +55,6 @@ class HomeView(View):
                 ("dcim.view_devicetype", "Device Types", DeviceType.objects.restrict(request.user, 'view').count),
                 ("dcim.view_device", "Devices", Device.objects.restrict(request.user, 'view').count),
             )
-            ipam = (
-                ("ipam.view_vrf", "VRFs", VRF.objects.restrict(request.user, 'view').count),
-                ("ipam.view_aggregate", "Aggregates", Aggregate.objects.restrict(request.user, 'view').count),
-                ("ipam.view_prefix", "Prefixes", Prefix.objects.restrict(request.user, 'view').count),
-                ("ipam.view_iprange", "IP Ranges", IPRange.objects.restrict(request.user, 'view').count),
-                ("ipam.view_ipaddress", "IP Addresses", IPAddress.objects.restrict(request.user, 'view').count),
-                ("ipam.view_vlan", "VLANs", VLAN.objects.restrict(request.user, 'view').count)
-
-            )
-            circuits = (
-                ("circuits.view_provider", "Providers", Provider.objects.restrict(request.user, 'view').count),
-                ("circuits.view_circuit", "Circuits", Circuit.objects.restrict(request.user, 'view').count),
-            )
             virtualization = (
                 ("virtualization.view_cluster", "Clusters", Cluster.objects.restrict(request.user, 'view').count),
                 ("virtualization.view_virtualmachine", "Virtual Machines", VirtualMachine.objects.restrict(request.user, 'view').count),
@@ -86,19 +70,12 @@ class HomeView(View):
                 ("dcim.view_powerpanel", "Power Panels", PowerPanel.objects.restrict(request.user, 'view').count),
                 ("dcim.view_powerfeed", "Power Feeds", PowerFeed.objects.restrict(request.user, 'view').count),
             )
-            wireless = (
-                ("wireless.view_wirelesslan", "Wireless LANs", WirelessLAN.objects.restrict(request.user, 'view').count),
-                ("wireless.view_wirelesslink", "Wireless Links", WirelessLink.objects.restrict(request.user, 'view').count),
-            )
             sections = (
                 ("Organization", org, "domain"),
-                ("IPAM", ipam, "counter"),
                 ("Virtualization", virtualization, "monitor"),
                 ("Inventory", dcim, "server"),
-                ("Circuits", circuits, "transit-connection-variant"),
                 ("Connections", connections, "cable-data"),
                 ("Power", power, "flash"),
-                ("Wireless", wireless, "wifi"),
             )
 
             stats = []

@@ -11,10 +11,8 @@ from netaddr import EUI
 from dcim.choices import *
 from dcim.constants import *
 from dcim.models import *
-from ipam.models import ASN, RIR, VLAN, VRF
 from tenancy.models import Tenant
 from utilities.testing import ViewTestCases, create_tags, create_test_device, post_data
-from wireless.models import WirelessLAN
 
 
 class RegionTestCase(ViewTestCases.OrganizationalObjectViewTestCase):

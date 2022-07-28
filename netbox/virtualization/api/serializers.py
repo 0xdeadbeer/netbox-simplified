@@ -3,8 +3,6 @@ from rest_framework import serializers
 
 from dcim.api.nested_serializers import NestedDeviceRoleSerializer, NestedPlatformSerializer, NestedSiteSerializer
 from dcim.choices import InterfaceModeChoices
-from ipam.api.nested_serializers import NestedIPAddressSerializer, NestedVLANSerializer, NestedVRFSerializer
-from ipam.models import VLAN
 from netbox.api import ChoiceField, SerializedPKRelatedField
 from netbox.api.serializers import NetBoxModelSerializer
 from tenancy.api.nested_serializers import NestedTenantSerializer
@@ -70,10 +68,6 @@ class VirtualMachineSerializer(NetBoxModelSerializer):
     role = NestedDeviceRoleSerializer(required=False, allow_null=True)
     tenant = NestedTenantSerializer(required=False, allow_null=True)
     platform = NestedPlatformSerializer(required=False, allow_null=True)
-    primary_ip = NestedIPAddressSerializer(read_only=True)
-    primary_ip4 = NestedIPAddressSerializer(required=False, allow_null=True)
-    primary_ip6 = NestedIPAddressSerializer(required=False, allow_null=True)
-
     class Meta:
         model = VirtualMachine
         fields = [
@@ -109,14 +103,6 @@ class VMInterfaceSerializer(NetBoxModelSerializer):
     parent = NestedVMInterfaceSerializer(required=False, allow_null=True)
     bridge = NestedVMInterfaceSerializer(required=False, allow_null=True)
     mode = ChoiceField(choices=InterfaceModeChoices, allow_blank=True, required=False)
-    untagged_vlan = NestedVLANSerializer(required=False, allow_null=True)
-    tagged_vlans = SerializedPKRelatedField(
-        queryset=VLAN.objects.all(),
-        serializer=NestedVLANSerializer,
-        required=False,
-        many=True
-    )
-    vrf = NestedVRFSerializer(required=False, allow_null=True)
     count_ipaddresses = serializers.IntegerField(read_only=True)
     count_fhrp_groups = serializers.IntegerField(read_only=True)
 

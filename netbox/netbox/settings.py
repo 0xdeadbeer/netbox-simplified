@@ -320,15 +320,12 @@ INSTALLED_APPS = [
     'social_django',
     'taggit',
     'timezone_field',
-    'circuits',
     'dcim',
-    'ipam',
     'extras',
     'tenancy',
     'users',
     'utilities',
     'virtualization',
-    'wireless',
     'django_rq',  # Must come after extras to allow overriding management commands
     'drf_yasg',
 ]

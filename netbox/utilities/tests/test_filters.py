@@ -5,8 +5,6 @@ from django.test import TestCase
 from mptt.fields import TreeForeignKey
 from taggit.managers import TaggableManager
 
-from circuits.filtersets import CircuitFilterSet, ProviderFilterSet
-from circuits.models import Circuit, Provider
 from dcim.choices import *
 from dcim.fields import MACAddressField
 from dcim.filtersets import DeviceFilterSet, SiteFilterSet
@@ -15,7 +13,6 @@ from dcim.models import (
 )
 from extras.filters import TagFilter
 from extras.models import TaggedItem
-from ipam.models import RIR, ASN
 from netbox.filtersets import BaseFilterSet
 from utilities.filters import (
     MACAddressFilter, MultiValueCharFilter, MultiValueDateFilter, MultiValueDateTimeFilter, MultiValueNumberFilter,

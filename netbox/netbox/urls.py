@@ -42,7 +42,6 @@ _patterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
 
     # Apps
-    path('circuits/', include('circuits.urls')),
     path('dcim/', include('dcim.urls')),
     path('extras/', include('extras.urls')),
     path('ipam/', include('ipam.urls')),
@@ -53,14 +52,11 @@ _patterns = [
 
     # API
     path('api/', APIRootView.as_view(), name='api-root'),
-    path('api/circuits/', include('circuits.api.urls')),
     path('api/dcim/', include('dcim.api.urls')),
     path('api/extras/', include('extras.api.urls')),
-    path('api/ipam/', include('ipam.api.urls')),
     path('api/tenancy/', include('tenancy.api.urls')),
     path('api/users/', include('users.api.urls')),
     path('api/virtualization/', include('virtualization.api.urls')),
-    path('api/wireless/', include('wireless.api.urls')),
     path('api/status/', StatusView.as_view(), name='api-status'),
     path('api/docs/', schema_view.with_ui('swagger', cache_timeout=86400), name='api_docs'),
     path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=86400), name='api_redocs'),

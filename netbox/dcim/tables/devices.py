@@ -195,6 +195,9 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
     tags = columns.TagColumn(
         url_name='dcim:device_list'
     )
+    _ipaddress = columns.ManyToManyColumn(
+        verbose_name='Ip Addressss'
+    )
 
     class Meta(NetBoxTable.Meta):
         model = Device
@@ -202,11 +205,11 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
             'pk', 'id', 'name', 'status', 'tenant', 'tenant_group', 'device_role', 'manufacturer', 'device_type', 'platform', 'serial',
             'asset_tag', 'site', 'location', 'rack', 'position', 'face', 'primary_ip', 'airflow', 'primary_ip4',
             'primary_ip6', 'cluster', 'virtual_chassis', 'vc_position', 'vc_priority', 'comments', 'contacts', 'tags',
-            'created', 'last_updated',
+            'created', 'last_updated', '_ipaddress'
         )
         default_columns = (
             'pk', 'name', 'status', 'tenant', 'site', 'location', 'rack', 'device_role', 'manufacturer', 'device_type',
-            'primary_ip',
+            'primary_ip', '_ipaddress'
         )
 
 

@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from circuits.models import *
 from dcim.choices import *
 from dcim.models import *
 from tenancy.models import Tenant

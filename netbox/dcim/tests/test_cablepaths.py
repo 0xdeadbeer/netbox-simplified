@@ -1,7 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
-from circuits.models import *
 from dcim.choices import LinkStatusChoices
 from dcim.models import *
 from dcim.utils import object_to_path_node

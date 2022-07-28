@@ -8,7 +8,6 @@ from rest_framework import status
 from dcim.models import Region, Site
 from extras.choices import CustomFieldTypeChoices
 from extras.models import CustomField
-from ipam.models import VLAN
 from netbox.config import get_config
 from utilities.testing import APITestCase, disable_warnings
 
@@ -37,7 +36,6 @@ class WritableNestedSerializerTest(APITestCase):
         response = self.client.post(url, data, format='json', **self.header)
         self.assertHttpStatus(response, status.HTTP_201_CREATED)
         self.assertEqual(response.data['site']['id'], self.site1.pk)
-        vlan = VLAN.objects.get(pk=response.data['id'])
         self.assertEqual(vlan.site, self.site1)
 
     def test_related_by_pk_no_match(self):
@@ -52,7 +50,6 @@ class WritableNestedSerializerTest(APITestCase):
         with disable_warnings('django.request'):
             response = self.client.post(url, data, format='json', **self.header)
         self.assertHttpStatus(response, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(VLAN.objects.count(), 0)
         self.assertTrue(response.data['site'][0].startswith("Related object not found"))
 
     def test_related_by_attributes(self):

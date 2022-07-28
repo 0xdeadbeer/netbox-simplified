@@ -86,9 +86,6 @@ MODULAR_COMPONENT_MODELS = Q(
 
 # Cable endpoint types
 CABLE_TERMINATION_MODELS = Q(
-    Q(app_label='circuits', model__in=(
-        'circuittermination',
-    )) |
     Q(app_label='dcim', model__in=(
         'consoleport',
         'consoleserverport',
@@ -102,7 +99,6 @@ CABLE_TERMINATION_MODELS = Q(
 )
 
 COMPATIBLE_TERMINATION_TYPES = {
-    'circuittermination': ['interface', 'frontport', 'rearport', 'circuittermination'],
     'consoleport': ['consoleserverport', 'frontport', 'rearport'],
     'consoleserverport': ['consoleport', 'frontport', 'rearport'],
     'interface': ['interface', 'circuittermination', 'frontport', 'rearport'],

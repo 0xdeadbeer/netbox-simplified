@@ -1,6 +1,5 @@
 from dcim.choices import InterfaceModeChoices
 from dcim.models import DeviceRole, Platform, Site
-from ipam.models import VRF
 from netbox.forms import NetBoxModelCSVForm
 from tenancy.models import Tenant
 from utilities.forms import CSVChoiceField, CSVModelChoiceField, SlugField
@@ -123,7 +122,6 @@ class VMInterfaceCSVForm(NetBoxModelCSVForm):
         help_text='IEEE 802.1Q operational mode (for L2 interfaces)'
     )
     vrf = CSVModelChoiceField(
-        queryset=VRF.objects.all(),
         required=False,
         to_field_name='rd',
         help_text='Assigned VRF'

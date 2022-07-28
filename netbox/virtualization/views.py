@@ -8,8 +8,6 @@ from dcim.filtersets import DeviceFilterSet
 from dcim.models import Device
 from dcim.tables import DeviceTable
 from extras.views import ObjectConfigContextView
-from ipam.models import IPAddress, Service
-from ipam.tables import AssignedIPAddressesTable, InterfaceVLANTable
 from netbox.views import generic
 from utilities.utils import count_related
 from . import filtersets, forms, tables
@@ -318,31 +316,6 @@ class VirtualMachineListView(generic.ObjectListView):
 class VirtualMachineView(generic.ObjectView):
     queryset = VirtualMachine.objects.prefetch_related('tenant__group')
 
-    def get_extra_context(self, request, instance):
-        # Interfaces
-        vminterfaces = VMInterface.objects.restrict(request.user, 'view').filter(
-            virtual_machine=instance
-        ).prefetch_related(
-            Prefetch('ip_addresses', queryset=IPAddress.objects.restrict(request.user))
-        )
-        vminterface_table = tables.VirtualMachineVMInterfaceTable(vminterfaces, user=request.user, orderable=False)
-        if request.user.has_perm('virtualization.change_vminterface') or \
-                request.user.has_perm('virtualization.delete_vminterface'):
-            vminterface_table.columns.show('pk')
-
-        # Services
-        services = Service.objects.restrict(request.user, 'view').filter(
-            virtual_machine=instance
-        ).prefetch_related(
-            Prefetch('ipaddresses', queryset=IPAddress.objects.restrict(request.user))
-        )
-
-        return {
-            'vminterface_table': vminterface_table,
-            'services': services,
-        }
-
-
 class VirtualMachineInterfacesView(generic.ObjectChildrenView):
     queryset = VirtualMachine.objects.all()
     child_model = VMInterface
@@ -351,8 +324,7 @@ class VirtualMachineInterfacesView(generic.ObjectChildrenView):
     template_name = 'virtualization/virtualmachine/interfaces.html'
 
     def get_children(self, request, parent):
-        return parent.interfaces.restrict(request.user, 'view').prefetch_related(
-            Prefetch('ip_addresses', queryset=IPAddress.objects.restrict(request.user)),
+        return parent.interfaces.restrict(request.user, 'view').prefetch_related(None,
             'tags',
         )
 
@@ -412,39 +384,9 @@ class VMInterfaceView(generic.ObjectView):
 
     def get_extra_context(self, request, instance):
         # Get assigned IP addresses
-        ipaddress_table = AssignedIPAddressesTable(
-            data=instance.ip_addresses.restrict(request.user, 'view').prefetch_related('vrf', 'tenant'),
-            orderable=False
-        )
 
         # Get child interfaces
         child_interfaces = VMInterface.objects.restrict(request.user, 'view').filter(parent=instance)
-        child_interfaces_tables = tables.VMInterfaceTable(
-            child_interfaces,
-            exclude=('virtual_machine',),
-            orderable=False
-        )
-
-        # Get assigned VLANs and annotate whether each is tagged or untagged
-        vlans = []
-        if instance.untagged_vlan is not None:
-            vlans.append(instance.untagged_vlan)
-            vlans[0].tagged = False
-        for vlan in instance.tagged_vlans.restrict(request.user).prefetch_related('site', 'group', 'tenant', 'role'):
-            vlan.tagged = True
-            vlans.append(vlan)
-        vlan_table = InterfaceVLANTable(
-            interface=instance,
-            data=vlans,
-            orderable=False
-        )
-
-        return {
-            'ipaddress_table': ipaddress_table,
-            'child_interfaces_table': child_interfaces_tables,
-            'vlan_table': vlan_table,
-        }
-
 
 class VMInterfaceCreateView(generic.ComponentCreateView):
     queryset = VMInterface.objects.all()

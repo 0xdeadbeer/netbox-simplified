@@ -8,8 +8,6 @@ from netaddr import IPNetwork
 from rest_framework.test import APIClient
 
 from dcim.models import Site
-from ipam.choices import PrefixStatusChoices
-from ipam.models import Prefix
 from users.models import ObjectPermission, Token
 from utilities.testing import TestCase
 

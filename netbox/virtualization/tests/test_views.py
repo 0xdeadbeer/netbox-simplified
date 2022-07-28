@@ -4,7 +4,6 @@ from netaddr import EUI
 
 from dcim.choices import InterfaceModeChoices
 from dcim.models import DeviceRole, Platform, Site
-from ipam.models import VLAN, VRF
 from utilities.testing import ViewTestCases, create_tags
 from virtualization.choices import *
 from virtualization.models import Cluster, ClusterGroup, ClusterType, VirtualMachine, VMInterface
@@ -255,20 +254,6 @@ class VMInterfaceTestCase(ViewTestCases.DeviceComponentViewTestCase):
             VMInterface(virtual_machine=virtualmachines[1], name='BRIDGE'),
         ])
 
-        vlans = (
-            VLAN(vid=1, name='VLAN1', site=site),
-            VLAN(vid=101, name='VLAN101', site=site),
-            VLAN(vid=102, name='VLAN102', site=site),
-            VLAN(vid=103, name='VLAN103', site=site),
-        )
-        VLAN.objects.bulk_create(vlans)
-
-        vrfs = (
-            VRF(name='VRF 1'),
-            VRF(name='VRF 2'),
-            VRF(name='VRF 3'),
-        )
-        VRF.objects.bulk_create(vrfs)
 
         tags = create_tags('Alpha', 'Bravo', 'Charlie')
 
@@ -281,9 +266,6 @@ class VMInterfaceTestCase(ViewTestCases.DeviceComponentViewTestCase):
             'mtu': 65000,
             'description': 'New description',
             'mode': InterfaceModeChoices.MODE_TAGGED,
-            'untagged_vlan': vlans[0].pk,
-            'tagged_vlans': [v.pk for v in vlans[1:4]],
-            'vrf': vrfs[0].pk,
             'tags': [t.pk for t in tags],
         }
 
@@ -296,17 +278,11 @@ class VMInterfaceTestCase(ViewTestCases.DeviceComponentViewTestCase):
             'mtu': 2000,
             'description': 'New description',
             'mode': InterfaceModeChoices.MODE_TAGGED,
-            'untagged_vlan': vlans[0].pk,
-            'tagged_vlans': [v.pk for v in vlans[1:4]],
-            'vrf': vrfs[0].pk,
             'tags': [t.pk for t in tags],
         }
 
         cls.csv_data = (
             f"virtual_machine,name,vrf.pk",
-            f"Virtual Machine 2,Interface 4,{vrfs[0].pk}",
-            f"Virtual Machine 2,Interface 5,{vrfs[0].pk}",
-            f"Virtual Machine 2,Interface 6,{vrfs[0].pk}",
         )
 
         cls.bulk_edit_data = {
@@ -314,6 +290,4 @@ class VMInterfaceTestCase(ViewTestCases.DeviceComponentViewTestCase):
             'mtu': 2000,
             'description': 'New description',
             'mode': InterfaceModeChoices.MODE_TAGGED,
-            'untagged_vlan': vlans[0].pk,
-            'tagged_vlans': [v.pk for v in vlans[1:4]],
         }

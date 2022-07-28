@@ -3,7 +3,6 @@ from django.utils.translation import gettext as _
 
 from dcim.models import DeviceRole, Platform, Region, Site, SiteGroup
 from extras.forms import LocalConfigContextFilterForm
-from ipam.models import VRF
 from netbox.forms import NetBoxModelFilterSetForm
 from tenancy.forms import ContactModelFilterForm, TenancyFilterForm
 from utilities.forms import (
@@ -194,7 +193,6 @@ class VMInterfaceFilterForm(NetBoxModelFilterSetForm):
         label='MAC address'
     )
     vrf_id = DynamicModelMultipleChoiceField(
-        queryset=VRF.objects.all(),
         required=False,
         label='VRF'
     )

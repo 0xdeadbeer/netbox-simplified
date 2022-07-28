@@ -171,12 +171,6 @@ class Rack(NetBoxModel):
     )
 
     # Generic relations
-    vlan_groups = GenericRelation(
-        to='ipam.VLANGroup',
-        content_type_field='scope_type',
-        object_id_field='scope_id',
-        related_query_name='rack'
-    )
     contacts = GenericRelation(
         to='tenancy.ContactAssignment'
     )

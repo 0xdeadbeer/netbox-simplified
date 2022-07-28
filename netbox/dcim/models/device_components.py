@@ -17,8 +17,6 @@ from utilities.fields import ColorField, NaturalOrderingField
 from utilities.mptt import TreeManager
 from utilities.ordering import naturalize_interface
 from utilities.query_functions import CollateAsChar
-from wireless.choices import *
-from wireless.utils import get_channel_attr
 
 
 __all__ = (
@@ -557,18 +555,6 @@ class Interface(ModularComponentModel, BaseInterface, LinkTermination, PathEndpo
         verbose_name='WWN',
         help_text='64-bit World Wide Name'
     )
-    rf_role = models.CharField(
-        max_length=30,
-        choices=WirelessRoleChoices,
-        blank=True,
-        verbose_name='Wireless role'
-    )
-    rf_channel = models.CharField(
-        max_length=50,
-        choices=WirelessChannelChoices,
-        blank=True,
-        verbose_name='Wireless channel'
-    )
     rf_channel_frequency = models.DecimalField(
         max_digits=7,
         decimal_places=2,
@@ -602,41 +588,6 @@ class Interface(ModularComponentModel, BaseInterface, LinkTermination, PathEndpo
         blank=True,
         verbose_name='Wireless LANs'
     )
-    untagged_vlan = models.ForeignKey(
-        to='ipam.VLAN',
-        on_delete=models.SET_NULL,
-        related_name='interfaces_as_untagged',
-        null=True,
-        blank=True,
-        verbose_name='Untagged VLAN'
-    )
-    tagged_vlans = models.ManyToManyField(
-        to='ipam.VLAN',
-        related_name='interfaces_as_tagged',
-        blank=True,
-        verbose_name='Tagged VLANs'
-    )
-    vrf = models.ForeignKey(
-        to='ipam.VRF',
-        on_delete=models.SET_NULL,
-        related_name='interfaces',
-        null=True,
-        blank=True,
-        verbose_name='VRF'
-    )
-    ip_addresses = GenericRelation(
-        to='ipam.IPAddress',
-        content_type_field='assigned_object_type',
-        object_id_field='assigned_object_id',
-        related_query_name='interface'
-    )
-    fhrp_group_assignments = GenericRelation(
-        to='ipam.FHRPGroupAssignment',
-        content_type_field='interface_type',
-        object_id_field='interface_id',
-        related_query_name='+'
-    )
-
     clone_fields = ['device', 'parent', 'bridge', 'lag', 'type', 'mgmt_only']
 
     class Meta:
@@ -739,22 +690,11 @@ class Interface(ModularComponentModel, BaseInterface, LinkTermination, PathEndpo
                 raise ValidationError({
                     'rf_channel_frequency': "Channel frequency may be set only on wireless interfaces.",
                 })
-            if self.rf_channel and self.rf_channel_frequency != get_channel_attr(self.rf_channel, 'frequency'):
-                raise ValidationError({
-                    'rf_channel_frequency': "Cannot specify custom frequency with channel selected.",
-                })
-        elif self.rf_channel:
-            self.rf_channel_frequency = get_channel_attr(self.rf_channel, 'frequency')
 
         # Validate channel width against interface type and selected channel (if any)
         if self.rf_channel_width:
             if not self.is_wireless:
                 raise ValidationError({'rf_channel_width': "Channel width may be set only on wireless interfaces."})
-            if self.rf_channel and self.rf_channel_width != get_channel_attr(self.rf_channel, 'width'):
-                raise ValidationError({'rf_channel_width': "Cannot specify custom width with channel selected."})
-        elif self.rf_channel:
-            self.rf_channel_width = get_channel_attr(self.rf_channel, 'width')
-
         # VLAN validation
 
         # Validate untagged VLAN

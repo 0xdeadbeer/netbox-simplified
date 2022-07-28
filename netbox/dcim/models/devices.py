@@ -587,30 +587,6 @@ class Device(NetBoxModel, ConfigContextModel):
     by the component templates assigned to its DeviceType. Components can also be added, modified, or deleted after the
     creation of a Device.
     """
-    device_type = models.ForeignKey(
-        to='dcim.DeviceType',
-        on_delete=models.PROTECT,
-        related_name='instances'
-    )
-    device_role = models.ForeignKey(
-        to='dcim.DeviceRole',
-        on_delete=models.PROTECT,
-        related_name='devices'
-    )
-    tenant = models.ForeignKey(
-        to='tenancy.Tenant',
-        on_delete=models.PROTECT,
-        related_name='devices',
-        blank=True,
-        null=True
-    )
-    platform = models.ForeignKey(
-        to='dcim.Platform',
-        on_delete=models.SET_NULL,
-        related_name='devices',
-        blank=True,
-        null=True
-    )
     name = models.CharField(
         max_length=64,
         blank=True,
@@ -622,125 +598,13 @@ class Device(NetBoxModel, ConfigContextModel):
         blank=True,
         null=True
     )
-    serial = models.CharField(
-        max_length=50,
-        blank=True,
-        verbose_name='Serial number'
-    )
-    asset_tag = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        unique=True,
-        verbose_name='Asset tag',
-        help_text='A unique tag used to identify this device'
-    )
-    site = models.ForeignKey(
-        to='dcim.Site',
-        on_delete=models.PROTECT,
-        related_name='devices'
-    )
-    location = models.ForeignKey(
-        to='dcim.Location',
-        on_delete=models.PROTECT,
-        related_name='devices',
-        blank=True,
-        null=True
-    )
-    rack = models.ForeignKey(
-        to='dcim.Rack',
-        on_delete=models.PROTECT,
-        related_name='devices',
-        blank=True,
-        null=True
-    )
-    position = models.PositiveSmallIntegerField(
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(1)],
-        verbose_name='Position (U)',
-        help_text='The lowest-numbered unit occupied by the device'
-    )
-    face = models.CharField(
-        max_length=50,
-        blank=True,
-        choices=DeviceFaceChoices,
-        verbose_name='Rack face'
-    )
-    status = models.CharField(
-        max_length=50,
-        choices=DeviceStatusChoices,
-        default=DeviceStatusChoices.STATUS_ACTIVE
-    )
-    airflow = models.CharField(
-        max_length=50,
-        choices=DeviceAirflowChoices,
-        blank=True
-    )
-    primary_ip4 = models.OneToOneField(
-        to='ipam.IPAddress',
-        on_delete=models.SET_NULL,
-        related_name='+',
-        blank=True,
-        null=True,
-        verbose_name='Primary IPv4'
-    )
-    primary_ip6 = models.OneToOneField(
-        to='ipam.IPAddress',
-        on_delete=models.SET_NULL,
-        related_name='+',
-        blank=True,
-        null=True,
-        verbose_name='Primary IPv6'
-    )
-    cluster = models.ForeignKey(
-        to='virtualization.Cluster',
-        on_delete=models.SET_NULL,
-        related_name='devices',
-        blank=True,
-        null=True
-    )
-    virtual_chassis = models.ForeignKey(
-        to='VirtualChassis',
-        on_delete=models.SET_NULL,
-        related_name='members',
-        blank=True,
-        null=True
-    )
-    vc_position = models.PositiveSmallIntegerField(
-        blank=True,
-        null=True,
-        validators=[MaxValueValidator(255)]
-    )
-    vc_priority = models.PositiveSmallIntegerField(
-        blank=True,
-        null=True,
-        validators=[MaxValueValidator(255)]
-    )
-    comments = models.TextField(
-        blank=True
-    )
-
-    # Generic relations
-    contacts = GenericRelation(
-        to='tenancy.ContactAssignment'
-    )
-    images = GenericRelation(
-        to='extras.ImageAttachment'
-    )
 
     objects = ConfigContextModelQuerySet.as_manager()
-
-    clone_fields = [
-        'device_type', 'device_role', 'tenant', 'platform', 'site', 'location', 'rack', 'status', 'airflow', 'cluster',
-    ]
 
     class Meta:
         ordering = ('_name', 'pk')  # Name may be null
         unique_together = (
-            ('site', 'tenant', 'name'),  # See validate_unique below
-            ('rack', 'position', 'face'),
-            ('virtual_chassis', 'vc_position'),
+            ('name'),  # See validate_unique below
         )
 
     def __str__(self):
@@ -748,14 +612,7 @@ class Device(NetBoxModel, ConfigContextModel):
             return f'{self.name} ({self.asset_tag})'
         elif self.name:
             return self.name
-        elif self.virtual_chassis and self.asset_tag:
-            return f'{self.virtual_chassis.name}:{self.vc_position} ({self.asset_tag})'
-        elif self.virtual_chassis:
-            return f'{self.virtual_chassis.name}:{self.vc_position} ({self.pk})'
-        elif self.device_type and self.asset_tag:
-            return f'{self.device_type.manufacturer} {self.device_type.model} ({self.asset_tag})'
-        elif self.device_type:
-            return f'{self.device_type.manufacturer} {self.device_type.model} ({self.pk})'
+        
         return super().__str__()
 
     def get_absolute_url(self):
@@ -766,11 +623,9 @@ class Device(NetBoxModel, ConfigContextModel):
         # Check for a duplicate name on a device assigned to the same Site and no Tenant. This is necessary
         # because Django does not consider two NULL fields to be equal, and thus will not trigger a violation
         # of the uniqueness constraint without manual intervention.
-        if self.name and hasattr(self, 'site') and self.tenant is None:
+        if self.name:
             if Device.objects.exclude(pk=self.pk).filter(
-                    name=self.name,
-                    site=self.site,
-                    tenant__isnull=True
+                    name=self.name
             ):
                 raise ValidationError({
                     'name': 'A device with this name already exists.'
@@ -780,124 +635,6 @@ class Device(NetBoxModel, ConfigContextModel):
 
     def clean(self):
         super().clean()
-
-        # Validate site/location/rack combination
-        if self.rack and self.site != self.rack.site:
-            raise ValidationError({
-                'rack': f"Rack {self.rack} does not belong to site {self.site}.",
-            })
-        if self.location and self.site != self.location.site:
-            raise ValidationError({
-                'location': f"Location {self.location} does not belong to site {self.site}.",
-            })
-        if self.rack and self.location and self.rack.location != self.location:
-            raise ValidationError({
-                'rack': f"Rack {self.rack} does not belong to location {self.location}.",
-            })
-        elif self.rack:
-            self.location = self.rack.location
-
-        if self.rack is None:
-            if self.face:
-                raise ValidationError({
-                    'face': "Cannot select a rack face without assigning a rack.",
-                })
-            if self.position:
-                raise ValidationError({
-                    'position': "Cannot select a rack position without assigning a rack.",
-                })
-
-        # Validate position/face combination
-        if self.position and not self.face:
-            raise ValidationError({
-                'face': "Must specify rack face when defining rack position.",
-            })
-
-        # Prevent 0U devices from being assigned to a specific position
-        if hasattr(self, 'device_type'):
-            if self.position and self.device_type.u_height == 0:
-                raise ValidationError({
-                    'position': f"A U0 device type ({self.device_type}) cannot be assigned to a rack position."
-                })
-
-        if self.rack:
-
-            try:
-                # Child devices cannot be assigned to a rack face/unit
-                if self.device_type.is_child_device and self.face:
-                    raise ValidationError({
-                        'face': "Child device types cannot be assigned to a rack face. This is an attribute of the "
-                                "parent device."
-                    })
-                if self.device_type.is_child_device and self.position:
-                    raise ValidationError({
-                        'position': "Child device types cannot be assigned to a rack position. This is an attribute of "
-                                    "the parent device."
-                    })
-
-                # Validate rack space
-                rack_face = self.face if not self.device_type.is_full_depth else None
-                exclude_list = [self.pk] if self.pk else []
-                available_units = self.rack.get_available_units(
-                    u_height=self.device_type.u_height, rack_face=rack_face, exclude=exclude_list
-                )
-                if self.position and self.position not in available_units:
-                    raise ValidationError({
-                        'position': f"U{self.position} is already occupied or does not have sufficient space to "
-                                    f"accommodate this device type: {self.device_type} ({self.device_type.u_height}U)"
-                    })
-
-            except DeviceType.DoesNotExist:
-                pass
-
-        # Validate primary IP addresses
-        vc_interfaces = self.vc_interfaces(if_master=False)
-        if self.primary_ip4:
-            if self.primary_ip4.family != 4:
-                raise ValidationError({
-                    'primary_ip4': f"{self.primary_ip4} is not an IPv4 address."
-                })
-            if self.primary_ip4.assigned_object in vc_interfaces:
-                pass
-            elif self.primary_ip4.nat_inside is not None and self.primary_ip4.nat_inside.assigned_object in vc_interfaces:
-                pass
-            else:
-                raise ValidationError({
-                    'primary_ip4': f"The specified IP address ({self.primary_ip4}) is not assigned to this device."
-                })
-        if self.primary_ip6:
-            if self.primary_ip6.family != 6:
-                raise ValidationError({
-                    'primary_ip6': f"{self.primary_ip6} is not an IPv6 address."
-                })
-            if self.primary_ip6.assigned_object in vc_interfaces:
-                pass
-            elif self.primary_ip6.nat_inside is not None and self.primary_ip6.nat_inside.assigned_object in vc_interfaces:
-                pass
-            else:
-                raise ValidationError({
-                    'primary_ip6': f"The specified IP address ({self.primary_ip6}) is not assigned to this device."
-                })
-
-        # Validate manufacturer/platform
-        if hasattr(self, 'device_type') and self.platform:
-            if self.platform.manufacturer and self.platform.manufacturer != self.device_type.manufacturer:
-                raise ValidationError({
-                    'platform': f"The assigned platform is limited to {self.platform.manufacturer} device types, but "
-                                f"this device's type belongs to {self.device_type.manufacturer}."
-                })
-
-        # A Device can only be assigned to a Cluster in the same Site (or no Site)
-        if self.cluster and self.cluster.site is not None and self.cluster.site != self.site:
-            raise ValidationError({
-                'cluster': "The assigned cluster belongs to a different site ({})".format(self.cluster.site)
-            })
-
-        # Validate virtual chassis assignment
-        if self.virtual_chassis and self.vc_position is None:
-            raise ValidationError({
-                'vc_position': "A device assigned to a virtual chassis must have its position defined."
-            })
 
     def save(self, *args, **kwargs):
         is_new = not bool(self.pk)
@@ -910,33 +647,6 @@ class Device(NetBoxModel, ConfigContextModel):
 
         # If this is a new Device, instantiate all of the related components per the DeviceType definition
         if is_new:
-            ConsolePort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.consoleporttemplates.all()]
-            )
-            ConsoleServerPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.consoleserverporttemplates.all()]
-            )
-            PowerPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.powerporttemplates.all()]
-            )
-            PowerOutlet.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.poweroutlettemplates.all()]
-            )
-            Interface.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.interfacetemplates.all()]
-            )
-            RearPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.rearporttemplates.all()]
-            )
-            FrontPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.frontporttemplates.all()]
-            )
-            ModuleBay.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.modulebaytemplates.all()]
-            )
-            DeviceBay.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.devicebaytemplates.all()]
-            )
             # Avoid bulk_create to handle MPTT
             for x in self.device_type.inventoryitemtemplates.all():
                 x.instantiate(device=self).save()

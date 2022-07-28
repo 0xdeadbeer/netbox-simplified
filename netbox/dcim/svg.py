@@ -475,7 +475,6 @@ class CableTraceSVG:
         Return an SVG document representing a cable trace.
         """
         from dcim.models import Cable
-        from wireless.models import WirelessLink
 
         traced_path = self.origin.trace()
 
@@ -531,20 +530,6 @@ class CableTraceSVG:
                         labels=connector_labels
                     )
                     connectors.append(cable)
-
-                # WirelessLink
-                elif type(connector) is WirelessLink:
-                    connector_labels = [
-                        f'Wireless link {connector}',
-                        connector.get_status_display()
-                    ]
-                    if connector.ssid:
-                        connector_labels.append(connector.ssid)
-                    wirelesslink = self._draw_wirelesslink(
-                        url=connector.get_absolute_url(),
-                        labels=connector_labels
-                    )
-                    connectors.append(wirelesslink)
 
                 # Far end termination
                 termination = self._draw_box(
