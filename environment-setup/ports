@@ -1,0 +1,8 @@
+host 8082 : docker 5432 
+	postgresql
+
+host 6379 : docker 6379
+	redis
+
+host 8081 
+	netbox 
