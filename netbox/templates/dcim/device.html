@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <table class="table table-hover attr-table">
                         <tr>
-                            <th scope="row">Region</th>
+                            <th scope="row"><b>Region:</b></th>
                             <td>
                                 {% if object.site.region %}
                                     {% for region in object.site.region.get_ancestors %}
@@ -28,118 +28,58 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Site</th>
-                            <td>{{ object.site|linkify }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Location</th>
-                            <td>
-                            {% if object.location %}
-                                {% for location in object.location.get_ancestors %}
-                                    {{ location|linkify }} /
-                                {% endfor %}
-                                {{ object.location|linkify }}
-                            {% else %}
-                                {{ ''|placeholder }}
-                            {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Rack</th>
-                            <td>{{ object.rack|linkify|placeholder }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Position</th>
-                            <td>
-                                {% if object.parent_bay %}
-                                    {% with object.parent_bay.device as parent %}
-                                        {{ parent|linkify }} / {{ object.parent_bay }}
-                                        {% if parent.position %}
-                                            (U{{ parent.position }} / {{ parent.get_face_display }})
-                                        {% endif %}
-                                    {% endwith %}
-                                {% elif object.rack and object.position %}
-                                    <span>U{{ object.position }} / {{ object.get_face_display }}</span>
-                                {% elif object.rack and object.device_type.u_height %}
-                                    <span class="badge bg-warning">Not racked</span>
+                            <th>
+                                <b>Comments:</b>
+                            </th>
+                            <th>
+                                {% if object.comments %}
+                                    {{ object.comments|markdown }}
                                 {% else %}
-                                    {{ ''|placeholder }}
+                                    None
                                 {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Tenant</th>
-                            <td>
-                                {% if object.tenant.group %}
-                                    {{ object.tenant.group|linkify }} /
-                                {% endif %}
-                                {{ object.tenant|linkify|placeholder }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Device Type</th>
-                            <td>
-                                {{ object.device_type|linkify }} ({{ object.device_type.u_height }}U)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Airflow</td>
-                            <td>
-                                {{ object.get_airflow_display|placeholder }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Serial Number</th>
-                            <td class="font-monospace">{{ object.serial|placeholder }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Asset Tag</th>
-                            <td class="font-monospace">{{ object.asset_tag|placeholder }}</td>
+                            </th>
                         </tr>
                     </table>
                 </div>
             </div>
-            {% if vc_members %}
-                <div class="card">
-                    <h5 class="card-header">
-                        Virtual Chassis
-                    </h5>
-                    <div class="card-body">
-                        <table class="table table-hover attr-table">
-                            <tr>
-                                <th>Device</th>
-                                <th>Position</th>
-                                <th>Master</th>
-                                <th>Priority</th>
-                            </tr>
-                            {% for vc_member in vc_members %}
-                                <tr{% if vc_member == object %} class="info"{% endif %}>
-                                    <td>
-                                        {{ vc_member|linkify }}
-                                    </td>
-                                    <td>
-                                      {% badge vc_member.vc_position show_empty=True %}
-                                    </td>
-                                    <td>
-                                      {% if object.virtual_chassis.master == vc_member %}<i class="mdi mdi-check-bold"></i>{% endif %}
-                                    </td>
-                                    <td>
-                                      {{ vc_member.vc_priority|default:"" }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+
+            <div class="card">
+                <h5 class="card-header">
+                    Services
+                </h5>
+                <div class="card-body">
+                {% if services %}
+                    <table class="table table-hover">
+                        
+                        <tr>
+                            <th>Commands</th>
+                            <th>Name</th>
+                            <th>Protocol</th>
+                            <th>Port</th>
+                            <th>Description</th>
+                        </tr>
+
+                        {% for service in services %}
+                            {% include 'ipam/inc/service.html' %}
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="text-muted">
+                        None
                     </div>
-                    <div class="card-footer text-end noprint">
-                        <a href="{{ object.virtual_chassis.get_absolute_url }}" class="btn btn-primary btn-sm">
-                            <span class="mdi mdi-arrow-right-bold" aria-hidden="true"></span> View Virtual Chassis
-                        </a>
-                    </div>
+                {% endif %}
                 </div>
-            {% endif %}
+                {% if perms.ipam.add_service %}
+                <div class="card-footer text-end noprint">
+                    <a href="{% url 'ipam:service_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
+                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Assign Service
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
             {% include 'inc/panels/custom_fields.html' %}
             {% include 'inc/panels/tags.html' %}
-            {% include 'inc/panels/comments.html' %}
             {% plugin_left_page object %}
         </div>
         <div class="col col-md-6">
@@ -150,46 +90,16 @@
                 <div class="card-body">
                     <table class="table table-hover attr-table">
                         <tr>
+                            <th scope="row">IP Address</th>
+                            <td>{% badge object.ip_address bg_color="orange" %}</td>
+                        </tr>
+                        <tr>
                             <th scope="row">Status</th>
                             <td>{% badge object.get_status_display bg_color=object.get_status_color %}</td>
                         </tr>
                         <tr>
                             <th scope="row">Role</th>
                             <td>{{ object.device_role|linkify }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Platform</th>
-                            <td>{{ object.platform|linkify|placeholder }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Primary IPv4</th>
-                            <td>
-                              {% if object.primary_ip4 %}
-                                <a href="{{ object.primary_ip4.get_absolute_url }}">{{ object.primary_ip4.address.ip }}</a>
-                                {% if object.primary_ip4.nat_inside %}
-                                  (NAT for {{ object.primary_ip4.nat_inside.address.ip|linkify }})
-                                {% elif object.primary_ip4.nat_outside %}
-                                  (NAT: {{ object.primary_ip4.nat_outside.address.ip|linkify }})
-                                {% endif %}
-                              {% else %}
-                                {{ ''|placeholder }}
-                              {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Primary IPv6</th>
-                            <td>
-                              {% if object.primary_ip6 %}
-                                <a href="{{ object.primary_ip6.get_absolute_url }}">{{ object.primary_ip6.address.ip }}</a>
-                                {% if object.primary_ip6.nat_inside %}
-                                  (NAT for {{ object.primary_ip6.nat_inside.address.ip|linkify }})
-                                {% elif object.primary_ip6.nat_outside %}
-                                  (NAT: {{ object.primary_ip6.nat_outside.address.ip|linkify }})
-                                {% endif %}
-                              {% else %}
-                                {{ ''|placeholder }}
-                              {% endif %}
-                            </td>
                         </tr>
                         {% if object.cluster %}
                             <tr>
@@ -250,33 +160,7 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="card">
-                <h5 class="card-header">
-                    Services
-                </h5>
-                <div class="card-body">
-                {% if services %}
-                    <table class="table table-hover">
-                        {% for service in services %}
-                            {% include 'ipam/inc/service.html' %}
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <div class="text-muted">
-                        None
-                    </div>
-                {% endif %}
-                </div>
-                {% if perms.ipam.add_service %}
-                <div class="card-footer text-end noprint">
-                    <a href="{% url 'ipam:service_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
-                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Assign Service
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-            {% include 'inc/panels/contacts.html' %}
-            {% include 'inc/panels/image_attachments.html' %}
+            
             {% plugin_right_page object %}
         </div>
     </div>
