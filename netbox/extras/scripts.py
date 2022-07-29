@@ -18,6 +18,8 @@ from django.utils.functional import classproperty
 from extras.api.serializers import ScriptOutputSerializer
 from extras.choices import JobResultStatusChoices, LogLevelChoices
 from extras.signals import clear_webhooks
+from ipam.formfields import IPAddressFormField, IPNetworkFormField
+from ipam.validators import MaxPrefixLengthValidator, MinPrefixLengthValidator, prefix_validator
 from utilities.exceptions import AbortTransaction
 from utilities.forms import add_blank_choice, DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from .context_managers import change_logging
@@ -214,12 +216,40 @@ class FileVar(ScriptVariable):
     """
     form_field = forms.FileField
 
+
+class IPAddressVar(ScriptVariable):
+    """
+    An IPv4 or IPv6 address without a mask.
+    """
+    form_field = IPAddressFormField
+
+
+class IPAddressWithMaskVar(ScriptVariable):
+    """
+    An IPv4 or IPv6 address with a mask.
+    """
+    form_field = IPNetworkFormField
+
+
 class IPNetworkVar(ScriptVariable):
     """
     An IPv4 or IPv6 prefix.
     """
+    form_field = IPNetworkFormField
+
     def __init__(self, min_prefix_length=None, max_prefix_length=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Set prefix validator and optional minimum/maximum prefix lengths
+        self.field_attrs['validators'] = [prefix_validator]
+        if min_prefix_length is not None:
+            self.field_attrs['validators'].append(
+                MinPrefixLengthValidator(min_prefix_length)
+            )
+        if max_prefix_length is not None:
+            self.field_attrs['validators'].append(
+                MaxPrefixLengthValidator(max_prefix_length)
+            )
 
 
 #

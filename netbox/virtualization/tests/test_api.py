@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 
 from dcim.choices import InterfaceModeChoices
+from ipam.models import VLAN, VRF
 from utilities.testing import APITestCase, APIViewTestCases
 from virtualization.models import Cluster, ClusterGroup, ClusterType, VirtualMachine, VMInterface
 
@@ -226,22 +227,45 @@ class VMInterfaceTest(APIViewTestCases.APIViewTestCase):
         )
         VMInterface.objects.bulk_create(interfaces)
 
+        vlans = (
+            VLAN(name='VLAN 1', vid=1),
+            VLAN(name='VLAN 2', vid=2),
+            VLAN(name='VLAN 3', vid=3),
+        )
+        VLAN.objects.bulk_create(vlans)
+
+        vrfs = (
+            VRF(name='VRF 1'),
+            VRF(name='VRF 2'),
+            VRF(name='VRF 3'),
+        )
+        VRF.objects.bulk_create(vrfs)
+
         cls.create_data = [
             {
                 'virtual_machine': virtualmachine.pk,
                 'name': 'Interface 4',
                 'mode': InterfaceModeChoices.MODE_TAGGED,
+                'tagged_vlans': [vlans[0].pk, vlans[1].pk],
+                'untagged_vlan': vlans[2].pk,
+                'vrf': vrfs[0].pk,
             },
             {
                 'virtual_machine': virtualmachine.pk,
                 'name': 'Interface 5',
                 'mode': InterfaceModeChoices.MODE_TAGGED,
                 'bridge': interfaces[0].pk,
+                'tagged_vlans': [vlans[0].pk, vlans[1].pk],
+                'untagged_vlan': vlans[2].pk,
+                'vrf': vrfs[1].pk,
             },
             {
                 'virtual_machine': virtualmachine.pk,
                 'name': 'Interface 6',
                 'mode': InterfaceModeChoices.MODE_TAGGED,
                 'parent': interfaces[1].pk,
+                'tagged_vlans': [vlans[0].pk, vlans[1].pk],
+                'untagged_vlan': vlans[2].pk,
+                'vrf': vrfs[2].pk,
             },
         ]

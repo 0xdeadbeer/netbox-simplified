@@ -8,6 +8,7 @@ from dcim.forms import SiteCSVForm
 from dcim.models import Manufacturer, Rack, Site
 from extras.choices import *
 from extras.models import CustomField
+from ipam.models import VLAN
 from utilities.testing import APITestCase, TestCase
 from virtualization.models import VirtualMachine
 

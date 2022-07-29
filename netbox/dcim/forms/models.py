@@ -7,14 +7,16 @@ from timezone_field import TimeZoneFormField
 from dcim.choices import *
 from dcim.constants import *
 from dcim.models import *
+from ipam.models import ASN, IPAddress, VLAN, VLANGroup, VRF
 from netbox.forms import NetBoxModelForm
 from tenancy.forms import TenancyForm
 from utilities.forms import (
     APISelect, add_blank_choice, BootstrapMixin, ClearableFileInput, CommentField, ContentTypeChoiceField,
     DynamicModelChoiceField, DynamicModelMultipleChoiceField, JSONField, NumericArrayField, SelectWithPK, SmallTextarea,
-    SlugField, StaticSelect, SelectSpeedWidget
+    SlugField, StaticSelect, SelectSpeedWidget,
 )
 from virtualization.models import Cluster, ClusterGroup
+from wireless.models import WirelessLAN, WirelessLANGroup
 from .common import InterfaceCommonForm
 
 __all__ = (
@@ -106,6 +108,11 @@ class SiteForm(TenancyForm, NetBoxModelForm):
         queryset=SiteGroup.objects.all(),
         required=False
     )
+    asns = DynamicModelMultipleChoiceField(
+        queryset=ASN.objects.all(),
+        label=_('ASNs'),
+        required=False
+    )
     slug = SlugField()
     time_zone = TimeZoneFormField(
         choices=add_blank_choice(TimeZoneFormField().choices),
@@ -125,7 +132,7 @@ class SiteForm(TenancyForm, NetBoxModelForm):
     class Meta:
         model = Site
         fields = (
-            'name', 'slug', 'status', 'region', 'group', 'tenant_group', 'tenant', 'facility', 'time_zone',
+            'name', 'slug', 'status', 'region', 'group', 'tenant_group', 'tenant', 'facility', 'asns', 'time_zone',
             'description', 'physical_address', 'shipping_address', 'latitude', 'longitude', 'comments', 'tags',
         )
         widgets = {
@@ -528,20 +535,33 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         label='Priority',
         help_text="The priority of the device in the virtual chassis"
     )
+    ip_address = forms.CharField(
+        required=False,
+        label='IP Address',
+        help_text="IP Address of this device",
+        max_length=100,
+    )
 
     class Meta:
         model = Device
         fields = [
-            'name', 'device_role', 'device_type', 'region', 'site_group', 'site', 'rack',
-            'location', 'position', 'status', 'platform',
+            'name', 'device_role', 'device_type', 'serial', 'asset_tag', 'region', 'site_group', 'site', 'rack',
+            'location', 'position', 'face', 'status', 'airflow', 'platform', 'primary_ip4', 'primary_ip6',
             'cluster_group', 'cluster', 'tenant_group', 'tenant', 'virtual_chassis', 'vc_position', 'vc_priority',
-            'comments', 'tags', 'local_context_data'
+            'comments', 'tags', 'local_context_data', 'ip_address'
         ]
         help_texts = {
             'device_role': "The function this device serves",
             'serial': "Chassis serial number",
             'local_context_data': "Local config context data overwrites all source contexts in the final rendered "
-                                "config context",
+                                "config   context",
+        }
+        widgets = {
+            'face': StaticSelect(),
+            'status': StaticSelect(),
+            'airflow': StaticSelect(),
+            'primary_ip4': StaticSelect(),
+            'primary_ip6': StaticSelect(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -556,6 +576,24 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
                 # Gather PKs of all interfaces belonging to this Device or a peer VirtualChassis member
                 interface_ids = self.instance.vc_interfaces(if_master=False).values_list('pk', flat=True)
 
+                # Collect interface IPs
+                interface_ips = IPAddress.objects.filter(
+                    address__family=family,
+                    assigned_object_type=ContentType.objects.get_for_model(Interface),
+                    assigned_object_id__in=interface_ids
+                ).prefetch_related('assigned_object')
+                if interface_ips:
+                    ip_list = [(ip.id, f'{ip.address} ({ip.assigned_object})') for ip in interface_ips]
+                    ip_choices.append(('Interface IPs', ip_list))
+                # Collect NAT IPs
+                nat_ips = IPAddress.objects.prefetch_related('nat_inside').filter(
+                    address__family=family,
+                    nat_inside__assigned_object_type=ContentType.objects.get_for_model(Interface),
+                    nat_inside__assigned_object_id__in=interface_ids
+                ).prefetch_related('assigned_object')
+                if nat_ips:
+                    ip_list = [(ip.id, f'{ip.address} (NAT)') for ip in nat_ips]
+                    ip_choices.append(('NAT IPs', ip_list))
                 self.fields['primary_ip{}'.format(family)].choices = ip_choices
 
             # If editing an existing device, exclude it from the list of occupied rack units. This ensures that a device
@@ -1251,10 +1289,12 @@ class InterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     wireless_lan_group = DynamicModelChoiceField(
+        queryset=WirelessLANGroup.objects.all(),
         required=False,
         label='Wireless LAN group'
     )
     wireless_lans = DynamicModelMultipleChoiceField(
+        queryset=WirelessLAN.objects.all(),
         required=False,
         label='Wireless LANs',
         query_params={
@@ -1262,10 +1302,12 @@ class InterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     vlan_group = DynamicModelChoiceField(
+        queryset=VLANGroup.objects.all(),
         required=False,
         label='VLAN group'
     )
     untagged_vlan = DynamicModelChoiceField(
+        queryset=VLAN.objects.all(),
         required=False,
         label='Untagged VLAN',
         query_params={
@@ -1274,6 +1316,7 @@ class InterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     tagged_vlans = DynamicModelMultipleChoiceField(
+        queryset=VLAN.objects.all(),
         required=False,
         label='Tagged VLANs',
         query_params={
@@ -1282,6 +1325,7 @@ class InterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     vrf = DynamicModelChoiceField(
+        queryset=VRF.objects.all(),
         required=False,
         label='VRF'
     )

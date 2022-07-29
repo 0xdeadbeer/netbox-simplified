@@ -1,3 +1,4 @@
+from unittest.util import _MAX_LENGTH
 import django_tables2 as tables
 from django_tables2.utils import Accessor
 
@@ -195,8 +196,8 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
     tags = columns.TagColumn(
         url_name='dcim:device_list'
     )
-    _ipaddress = columns.ManyToManyColumn(
-        verbose_name='Ip Addressss'
+    ip_address = tables.Column (
+        verbose_name='IP Address'
     )
 
     class Meta(NetBoxTable.Meta):
@@ -205,11 +206,11 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
             'pk', 'id', 'name', 'status', 'tenant', 'tenant_group', 'device_role', 'manufacturer', 'device_type', 'platform', 'serial',
             'asset_tag', 'site', 'location', 'rack', 'position', 'face', 'primary_ip', 'airflow', 'primary_ip4',
             'primary_ip6', 'cluster', 'virtual_chassis', 'vc_position', 'vc_priority', 'comments', 'contacts', 'tags',
-            'created', 'last_updated', '_ipaddress'
+            'created', 'last_updated', 'ip_address'
         )
         default_columns = (
             'pk', 'name', 'status', 'tenant', 'site', 'location', 'rack', 'device_role', 'manufacturer', 'device_type',
-            'primary_ip', '_ipaddress'
+            'ip_address',
         )
 
 

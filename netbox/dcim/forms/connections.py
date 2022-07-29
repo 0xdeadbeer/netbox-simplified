@@ -1,3 +1,4 @@
+from circuits.models import Circuit, CircuitTermination, Provider
 from dcim.models import *
 from extras.models import Tag
 from netbox.forms import NetBoxModelForm

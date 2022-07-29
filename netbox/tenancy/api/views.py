@@ -1,6 +1,8 @@
 from rest_framework.routers import APIRootView
 
+from circuits.models import Circuit
 from dcim.models import Device, Rack, Site
+from ipam.models import IPAddress, Prefix, VLAN, VRF
 from netbox.api.viewsets import NetBoxModelViewSet
 from tenancy import filtersets
 from tenancy.models import *
@@ -37,10 +39,15 @@ class TenantViewSet(NetBoxModelViewSet):
     queryset = Tenant.objects.prefetch_related(
         'group', 'tags'
     ).annotate(
+        circuit_count=count_related(Circuit, 'tenant'),
         device_count=count_related(Device, 'tenant'),
+        ipaddress_count=count_related(IPAddress, 'tenant'),
+        prefix_count=count_related(Prefix, 'tenant'),
         rack_count=count_related(Rack, 'tenant'),
         site_count=count_related(Site, 'tenant'),
         virtualmachine_count=count_related(VirtualMachine, 'tenant'),
+        vlan_count=count_related(VLAN, 'tenant'),
+        vrf_count=count_related(VRF, 'tenant'),
         cluster_count=count_related(Cluster, 'tenant')
     )
     serializer_class = serializers.TenantSerializer

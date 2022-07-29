@@ -7,10 +7,12 @@ from django.utils.safestring import mark_safe
 from dcim.choices import *
 from dcim.constants import *
 from dcim.models import *
+from ipam.models import VRF
 from netbox.forms import NetBoxModelCSVForm
 from tenancy.models import Tenant
 from utilities.forms import CSVChoiceField, CSVContentTypeField, CSVModelChoiceField, CSVTypedChoiceField, SlugField
 from virtualization.models import Cluster
+from wireless.choices import WirelessRoleChoices
 
 __all__ = (
     'CableCSVForm',
@@ -631,6 +633,12 @@ class InterfaceCSVForm(NetBoxModelCSVForm):
         to_field_name='rd',
         help_text='Assigned VRF'
     )
+    rf_role = CSVChoiceField(
+        choices=WirelessRoleChoices,
+        required=False,
+        help_text='Wireless role (AP/station)'
+    )
+
     class Meta:
         model = Interface
         fields = (

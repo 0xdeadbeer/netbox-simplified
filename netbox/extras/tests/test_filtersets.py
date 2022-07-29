@@ -5,12 +5,14 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
+from circuits.models import Provider
 from dcim.models import DeviceRole, DeviceType, Manufacturer, Platform, Rack, Region, Site, SiteGroup
 from extras.choices import (
     CustomFieldTypeChoices, CustomFieldFilterLogicChoices, JournalEntryKindChoices, ObjectChangeActionChoices,
 )
 from extras.filtersets import *
 from extras.models import *
+from ipam.models import IPAddress
 from tenancy.models import Tenant, TenantGroup
 from utilities.testing import BaseFilterSetTests, ChangeLoggedFilterSetTests, create_tags
 from virtualization.models import Cluster, ClusterGroup, ClusterType

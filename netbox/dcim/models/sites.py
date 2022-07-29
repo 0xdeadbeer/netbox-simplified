@@ -48,6 +48,12 @@ class Region(NestedGroupModel):
     )
 
     # Generic relations
+    vlan_groups = GenericRelation(
+        to='ipam.VLANGroup',
+        content_type_field='scope_type',
+        object_id_field='scope_id',
+        related_query_name='region'
+    )
     contacts = GenericRelation(
         to='tenancy.ContactAssignment'
     )
@@ -128,6 +134,12 @@ class SiteGroup(NestedGroupModel):
     )
 
     # Generic relations
+    vlan_groups = GenericRelation(
+        to='ipam.VLANGroup',
+        content_type_field='scope_type',
+        object_id_field='scope_id',
+        related_query_name='site_group'
+    )
     contacts = GenericRelation(
         to='tenancy.ContactAssignment'
     )
@@ -231,6 +243,11 @@ class Site(NetBoxModel):
         blank=True,
         help_text='Local facility ID or description'
     )
+    asns = models.ManyToManyField(
+        to='ipam.ASN',
+        related_name='sites',
+        blank=True
+    )
     time_zone = TimeZoneField(
         blank=True
     )
@@ -265,6 +282,12 @@ class Site(NetBoxModel):
     )
 
     # Generic relations
+    vlan_groups = GenericRelation(
+        to='ipam.VLANGroup',
+        content_type_field='scope_type',
+        object_id_field='scope_id',
+        related_query_name='site'
+    )
     contacts = GenericRelation(
         to='tenancy.ContactAssignment'
     )
@@ -330,7 +353,13 @@ class Location(NestedGroupModel):
         blank=True
     )
 
-    # Generic relationship
+    # Generic relations
+    vlan_groups = GenericRelation(
+        to='ipam.VLANGroup',
+        content_type_field='scope_type',
+        object_id_field='scope_id',
+        related_query_name='location'
+    )
     contacts = GenericRelation(
         to='tenancy.ContactAssignment'
     )

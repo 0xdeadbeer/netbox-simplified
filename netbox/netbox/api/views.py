@@ -27,13 +27,16 @@ class APIRootView(APIView):
     def get(self, request, format=None):
 
         return Response(OrderedDict((
+            ('circuits', reverse('circuits-api:api-root', request=request, format=format)),
             ('dcim', reverse('dcim-api:api-root', request=request, format=format)),
             ('extras', reverse('extras-api:api-root', request=request, format=format)),
+            ('ipam', reverse('ipam-api:api-root', request=request, format=format)),
             ('plugins', reverse('plugins-api:api-root', request=request, format=format)),
             ('status', reverse('api-status', request=request, format=format)),
             ('tenancy', reverse('tenancy-api:api-root', request=request, format=format)),
             ('users', reverse('users-api:api-root', request=request, format=format)),
             ('virtualization', reverse('virtualization-api:api-root', request=request, format=format)),
+            ('wireless', reverse('wireless-api:api-root', request=request, format=format)),
         )))
 
 

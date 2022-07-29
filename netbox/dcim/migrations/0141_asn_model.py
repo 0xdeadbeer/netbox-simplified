@@ -6,8 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('ipam', '0053_asn_model'),
         ('dcim', '0140_wireless'),
     ]
 
     operations = [
+        migrations.AddField(
+            model_name='site',
+            name='asns',
+            field=models.ManyToManyField(blank=True, related_name='sites', to='ipam.ASN'),
+        ),
     ]

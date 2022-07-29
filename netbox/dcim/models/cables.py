@@ -151,6 +151,7 @@ class Cable(NetBoxModel):
         return reverse('dcim:cable', args=[self.pk])
 
     def clean(self):
+        from circuits.models import CircuitTermination
 
         super().clean()
 
@@ -378,6 +379,7 @@ class CablePath(models.Model):
         """
         Create a new CablePath instance as traced from the given path origin.
         """
+        from circuits.models import CircuitTermination
 
         if origin is None or origin.link is None:
             return None

@@ -6,6 +6,7 @@ from dcim.forms.common import InterfaceCommonForm
 from dcim.forms.models import INTERFACE_MODE_HELP_TEXT
 from dcim.models import Device, DeviceRole, Platform, Rack, Region, Site, SiteGroup
 from extras.models import Tag
+from ipam.models import IPAddress, VLAN, VLANGroup, VRF
 from netbox.forms import NetBoxModelForm
 from tenancy.forms import TenancyForm
 from utilities.forms import (
@@ -227,6 +228,24 @@ class VirtualMachineForm(TenancyForm, NetBoxModelForm):
                 # Gather PKs of all interfaces belonging to this VM
                 interface_ids = self.instance.interfaces.values_list('pk', flat=True)
 
+                # Collect interface IPs
+                interface_ips = IPAddress.objects.filter(
+                    address__family=family,
+                    assigned_object_type=ContentType.objects.get_for_model(VMInterface),
+                    assigned_object_id__in=interface_ids
+                )
+                if interface_ips:
+                    ip_list = [(ip.id, f'{ip.address} ({ip.assigned_object})') for ip in interface_ips]
+                    ip_choices.append(('Interface IPs', ip_list))
+                # Collect NAT IPs
+                nat_ips = IPAddress.objects.prefetch_related('nat_inside').filter(
+                    address__family=family,
+                    nat_inside__assigned_object_type=ContentType.objects.get_for_model(VMInterface),
+                    nat_inside__assigned_object_id__in=interface_ids
+                )
+                if nat_ips:
+                    ip_list = [(ip.id, f'{ip.address} (NAT)') for ip in nat_ips]
+                    ip_choices.append(('NAT IPs', ip_list))
                 self.fields['primary_ip{}'.format(family)].choices = ip_choices
 
         else:
@@ -256,10 +275,12 @@ class VMInterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     vlan_group = DynamicModelChoiceField(
+        queryset=VLANGroup.objects.all(),
         required=False,
         label='VLAN group'
     )
     untagged_vlan = DynamicModelChoiceField(
+        queryset=VLAN.objects.all(),
         required=False,
         label='Untagged VLAN',
         query_params={
@@ -268,6 +289,7 @@ class VMInterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     tagged_vlans = DynamicModelMultipleChoiceField(
+        queryset=VLAN.objects.all(),
         required=False,
         label='Tagged VLANs',
         query_params={
@@ -276,6 +298,7 @@ class VMInterfaceForm(InterfaceCommonForm, NetBoxModelForm):
         }
     )
     vrf = DynamicModelChoiceField(
+        queryset=VRF.objects.all(),
         required=False,
         label='VRF'
     )

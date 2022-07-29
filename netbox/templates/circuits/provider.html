@@ -1,0 +1,96 @@
+{% extends 'generic/object.html' %}
+{% load static %}
+{% load helpers %}
+{% load plugins %}
+{% load render_table from django_tables2 %}
+
+{% block extra_controls %}
+  {% if perms.circuits.add_circuit %}
+    <a href="{% url 'circuits:circuit_add' %}?provider={{ object.pk }}" class="btn btn-sm btn-primary">
+      <i class="mdi mdi-plus-thick" aria-hidden="true"></i> Add circuit
+    </a>
+  {% endif %}
+{% endblock extra_controls %}
+
+{% block content %}
+<div class="row mb-3">
+	  <div class="col col-md-6">
+        <div class="card">
+            <h5 class="card-header">Provider</h5>
+            <div class="card-body">
+                <table class="table table-hover attr-table">
+                    <tr>
+                      <th scope="row">ASN</th>
+                      <td>
+                        {% if object.asn %}
+                          <div class="float-end text-warning">
+                            <i class="mdi mdi-alert" title="This field will be removed in a future release. Please migrate this data to ASN objects."></i>
+                          </div>
+                        {% endif %}
+                        {{ object.asn|placeholder }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">ASNs</th>
+                      <td>
+                        {% for asn in object.asns.all %}
+                          {{ asn|linkify }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                          {{ ''|placeholder }}
+                        {% endfor %}
+                      </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Account</th>
+                        <td>{{ object.account|placeholder }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Customer Portal</th>
+                        <td>
+                            {% if object.portal_url %}
+                                <a href="{{ object.portal_url }}">{{ object.portal_url }}</a>
+                            {% else %}
+                                {{ ''|placeholder }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">NOC Contact</th>
+                        <td>{{ object.noc_contact|markdown|placeholder }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Admin Contact</th>
+                        <td>{{ object.admin_contact|markdown|placeholder }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Circuits</th>
+                        <td>
+                            <a href="{% url 'circuits:circuit_list' %}?provider={{ object.slug }}">{{ circuits_table.rows|length }}</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% include 'inc/panels/tags.html' %}
+        {% plugin_left_page object %}
+    </div>
+    <div class="col col-md-6">
+        {% include 'inc/panels/custom_fields.html' %}
+        {% include 'inc/panels/comments.html' %}
+        {% include 'inc/panels/contacts.html' %}
+        {% plugin_right_page object %}
+    </div>
+</div>
+<div class="row mb-3">
+  <div class="col col-md-12">
+    <div class="card">
+      <h5 class="card-header">Circuits</h5>
+      <div class="card-body table-responsive">
+        {% render_table circuits_table 'inc/table.html' %}
+        {% include 'inc/paginator.html' with paginator=circuits_table.paginator page=circuits_table.page %}
+      </div>
+    </div>
+    {% plugin_full_width_page object %}
+  </div>
+</div>
+{% endblock %}

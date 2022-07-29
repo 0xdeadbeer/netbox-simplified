@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import TestCase, override_settings
 
+from circuits.models import Provider
 from dcim.models import Site
 from extras.validators import CustomValidator
 

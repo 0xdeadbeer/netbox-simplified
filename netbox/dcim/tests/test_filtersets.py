@@ -4,10 +4,12 @@ from django.test import TestCase
 from dcim.choices import *
 from dcim.filtersets import *
 from dcim.models import *
+from ipam.models import ASN, IPAddress, RIR, VRF
 from tenancy.models import Tenant, TenantGroup
 from utilities.choices import ColorChoices
 from utilities.testing import ChangeLoggedFilterSetTests, create_test_device
 from virtualization.models import Cluster, ClusterType
+from wireless.choices import WirelessChannelChoices, WirelessRoleChoices
 
 
 class RegionTestCase(TestCase, ChangeLoggedFilterSetTests):
