@@ -15,22 +15,7 @@
                 <div class="card-body">
                     <table class="table table-hover attr-table">
                         <tr>
-                            <th scope="row"><b>Region:</b></th>
-                            <td>
-                                {% if object.site.region %}
-                                    {% for region in object.site.region.get_ancestors %}
-                                        {{ region|linkify }} /
-                                    {% endfor %}
-                                    {{ object.site.region|linkify }}
-                                {% else %}
-                                    {{ ''|placeholder }}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <b>Comments:</b>
-                            </th>
+                            <th>Comments:</th>
                             <th>
                                 {% if object.comments %}
                                     {{ object.comments|markdown }}
@@ -103,7 +88,13 @@
                         </tr>
                         <tr>
                             <th scope="row">Role</th>
-                            <td>{{ object.device_role|linkify }}</td>
+                            <td>
+                                {% if object.device_role %}
+                                    {{ object.device_role|linkify }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </td>
                         </tr>
                         {% if object.cluster %}
                             <tr>

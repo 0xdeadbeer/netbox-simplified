@@ -19,7 +19,7 @@ from netbox.models import OrganizationalModel, NetBoxModel
 from utilities.choices import ColorChoices
 from utilities.fields import ColorField, NaturalOrderingField
 from .device_components import *
-
+from .sites import Site
 
 __all__ = (
     'Device',
@@ -591,12 +591,16 @@ class Device(NetBoxModel, ConfigContextModel):
     device_type = models.ForeignKey(
         to='dcim.DeviceType',
         on_delete=models.PROTECT,
-        related_name='instances'
+        related_name='instances',
+        blank=True, 
+        null=True,
     )
     device_role = models.ForeignKey(
         to='dcim.DeviceRole',
         on_delete=models.PROTECT,
-        related_name='devices'
+        related_name='devices',
+        blank=True, 
+        null=True,
     )
     tenant = models.ForeignKey(
         to='tenancy.Tenant',
@@ -639,7 +643,9 @@ class Device(NetBoxModel, ConfigContextModel):
     site = models.ForeignKey(
         to='dcim.Site',
         on_delete=models.PROTECT,
-        related_name='devices'
+        related_name='devices',
+        blank=True,
+        null=True,
     )
     location = models.ForeignKey(
         to='dcim.Location',
@@ -915,43 +921,45 @@ class Device(NetBoxModel, ConfigContextModel):
         is_new = not bool(self.pk)
 
         # Inherit airflow attribute from DeviceType if not set
-        if is_new and not self.airflow:
-            self.airflow = self.device_type.airflow
+        if (hasattr(self, 'device_type')):
+            if is_new and not self.airflow:
+                self.airflow = self.device_type.airflow
+
+
+            # If this is a new Device, instantiate all of the related components per the DeviceType definition
+            if is_new:
+                ConsolePort.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.consoleporttemplates.all()]
+                )
+                ConsoleServerPort.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.consoleserverporttemplates.all()]
+                )
+                PowerPort.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.powerporttemplates.all()]
+                )
+                PowerOutlet.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.poweroutlettemplates.all()]
+                )
+                Interface.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.interfacetemplates.all()]
+                )
+                RearPort.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.rearporttemplates.all()]
+                )
+                FrontPort.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.frontporttemplates.all()]
+                )
+                ModuleBay.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.modulebaytemplates.all()]
+                )
+                DeviceBay.objects.bulk_create(
+                    [x.instantiate(device=self) for x in self.device_type.devicebaytemplates.all()]
+                )
+                # Avoid bulk_create to handle MPTT
+                for x in self.device_type.inventoryitemtemplates.all():
+                    x.instantiate(device=self).save()
 
         super().save(*args, **kwargs)
-
-        # If this is a new Device, instantiate all of the related components per the DeviceType definition
-        if is_new:
-            ConsolePort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.consoleporttemplates.all()]
-            )
-            ConsoleServerPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.consoleserverporttemplates.all()]
-            )
-            PowerPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.powerporttemplates.all()]
-            )
-            PowerOutlet.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.poweroutlettemplates.all()]
-            )
-            Interface.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.interfacetemplates.all()]
-            )
-            RearPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.rearporttemplates.all()]
-            )
-            FrontPort.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.frontporttemplates.all()]
-            )
-            ModuleBay.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.modulebaytemplates.all()]
-            )
-            DeviceBay.objects.bulk_create(
-                [x.instantiate(device=self) for x in self.device_type.devicebaytemplates.all()]
-            )
-            # Avoid bulk_create to handle MPTT
-            for x in self.device_type.inventoryitemtemplates.all():
-                x.instantiate(device=self).save()
 
         # Update Site and Rack assignment for any child Devices
         devices = Device.objects.filter(parent_bay__device=self)

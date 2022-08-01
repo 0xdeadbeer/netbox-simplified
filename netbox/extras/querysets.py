@@ -17,7 +17,7 @@ class ConfigContextQuerySet(RestrictedQuerySet):
         """
 
         # `device_role` for Device; `role` for VirtualMachine
-        role = getattr(obj, 'device_role', None) or obj.role
+        role = getattr(obj, 'device_role', None) or getattr(obj, 'role', None)
 
         # Device type assignment is relevant only for Devices
         device_type = getattr(obj, 'device_type', None)

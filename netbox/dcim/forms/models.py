@@ -444,6 +444,7 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
     )
     site = DynamicModelChoiceField(
         queryset=Site.objects.all(),
+        required=False,
         query_params={
             'region_id': '$region',
             'group_id': '$site_group',
@@ -487,12 +488,14 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
     )
     device_type = DynamicModelChoiceField(
         queryset=DeviceType.objects.all(),
+        required=False,
         query_params={
             'manufacturer_id': '$manufacturer'
         }
     )
     device_role = DynamicModelChoiceField(
-        queryset=DeviceRole.objects.all()
+        queryset=DeviceRole.objects.all(),
+        required=False
     )
     platform = DynamicModelChoiceField(
         queryset=Platform.objects.all(),
@@ -606,12 +609,13 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
             # can be flipped from one face to another.
             self.fields['position'].widget.add_query_param('exclude', self.instance.pk)
 
-            # Disable rack assignment if this is a child device installed in a parent device
-            if self.instance.device_type.is_child_device and hasattr(self.instance, 'parent_bay'):
-                self.fields['site'].disabled = True
-                self.fields['rack'].disabled = True
-                self.initial['site'] = self.instance.parent_bay.device.site_id
-                self.initial['rack'] = self.instance.parent_bay.device.rack_id
+            if (hasattr(self, 'device_type')):
+                # Disable rack assignment if this is a child device installed in a parent device
+                if self.instance.device_type.is_child_device and hasattr(self.instance, 'parent_bay'):
+                    self.fields['site'].disabled = True
+                    self.fields['rack'].disabled = True
+                    self.initial['site'] = self.instance.parent_bay.device.site_id
+                    self.initial['rack'] = self.instance.parent_bay.device.rack_id
 
         else:
 
