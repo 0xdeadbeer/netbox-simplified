@@ -732,13 +732,19 @@ class Device(NetBoxModel, ConfigContextModel):
     ip_address = models.CharField(
         verbose_name='IP Address',
         max_length=255,
+        default=''
+    )
+    url = models.CharField (
+        verbose_name='URL',
+        max_length=255,
+        default=''
     )
 
     objects = ConfigContextModelQuerySet.as_manager()
 
     clone_fields = [
         'device_type', 'device_role', 'tenant', 'platform', 'site', 'location', 'rack', 'status', 'airflow', 'cluster',
-        'ip_address'
+        'ip_address', 'url'
     ]
 
     class Meta:

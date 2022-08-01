@@ -918,7 +918,11 @@ class DeviceFilterSet(NetBoxModelFilterSet, TenancyFilterSet, ContactModelFilter
     )
     ip_address = django_filters.BooleanFilter (
         method='ip_address',
-        label='test'
+        label='Has an IP Address'
+    )
+    url = django_filters.BooleanFilter ( 
+        method='url',
+        label='Has a URL',
     )
 
     class Meta:

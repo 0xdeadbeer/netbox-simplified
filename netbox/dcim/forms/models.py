@@ -539,7 +539,13 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         required=False,
         label='IP Address',
         help_text="IP Address of this device",
-        max_length=100,
+        max_length=255,
+    )
+    url = forms.CharField(
+        required=False,
+        label='URL',
+        help_text="URL of this device",
+        max_length=255,
     )
 
     class Meta:
@@ -548,7 +554,7 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
             'name', 'device_role', 'device_type', 'serial', 'asset_tag', 'region', 'site_group', 'site', 'rack',
             'location', 'position', 'face', 'status', 'airflow', 'platform', 'primary_ip4', 'primary_ip6',
             'cluster_group', 'cluster', 'tenant_group', 'tenant', 'virtual_chassis', 'vc_position', 'vc_priority',
-            'comments', 'tags', 'local_context_data', 'ip_address'
+            'comments', 'tags', 'local_context_data', 'ip_address', 'url'
         ]
         help_texts = {
             'device_role': "The function this device serves",
