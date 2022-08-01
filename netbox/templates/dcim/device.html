@@ -24,6 +24,16 @@
                                 {% endif %}
                             </th>
                         </tr>
+                        <tr>
+                            <th>Operating System: </th>
+                            <th>
+                                {% if object.os %}
+                                    {{ object.os }}
+                                {% else %}
+                                    Not specified
+                                {% endif %}
+                            </th>
+                        </tr>
                     </table>
                 </div>
             </div>

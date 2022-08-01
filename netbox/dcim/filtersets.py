@@ -924,6 +924,10 @@ class DeviceFilterSet(NetBoxModelFilterSet, TenancyFilterSet, ContactModelFilter
         method='url',
         label='Has a URL',
     )
+    os = django_filters.BooleanFilter (
+        method='os',
+        label='Runs OS'
+    )
 
     class Meta:
         model = Device

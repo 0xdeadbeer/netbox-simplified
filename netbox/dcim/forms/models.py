@@ -550,6 +550,12 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         help_text="URL of this device",
         max_length=255,
     )
+    os = forms.CharField(
+        required=False,
+        label='Operating System',
+        help_text="Operating System running on the device",
+        max_length=255
+    )
 
     class Meta:
         model = Device
@@ -557,7 +563,7 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
             'name', 'device_role', 'device_type', 'serial', 'asset_tag', 'region', 'site_group', 'site', 'rack',
             'location', 'position', 'face', 'status', 'airflow', 'platform', 'primary_ip4', 'primary_ip6',
             'cluster_group', 'cluster', 'tenant_group', 'tenant', 'virtual_chassis', 'vc_position', 'vc_priority',
-            'comments', 'tags', 'local_context_data', 'ip_address', 'url'
+            'comments', 'tags', 'local_context_data', 'ip_address', 'url', 'os'
         ]
         help_texts = {
             'device_role': "The function this device serves",
