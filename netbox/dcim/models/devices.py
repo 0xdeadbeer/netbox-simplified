@@ -927,7 +927,7 @@ class Device(NetBoxModel, ConfigContextModel):
         is_new = not bool(self.pk)
 
         # Inherit airflow attribute from DeviceType if not set
-        if (hasattr(self, 'device_type')):
+        if (self.device_type):
             if is_new and not self.airflow:
                 self.airflow = self.device_type.airflow
 

@@ -15,22 +15,22 @@
                 <div class="card-body">
                     <table class="table table-hover attr-table">
                         <tr>
-                            <th>Comments:</th>
-                            <th>
-                                {% if object.comments %}
-                                    {{ object.comments|markdown }}
-                                {% else %}
-                                    None
-                                {% endif %}
-                            </th>
-                        </tr>
-                        <tr>
                             <th>Operating System: </th>
                             <th>
                                 {% if object.os %}
                                     {{ object.os }}
                                 {% else %}
                                     Not specified
+                                {% endif %}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Comments:</th>
+                            <th>
+                                {% if object.comments %}
+                                    {{ object.comments|markdown }}
+                                {% else %}
+                                    None
                                 {% endif %}
                             </th>
                         </tr>
@@ -74,7 +74,6 @@
             </div>
 
             {% include 'inc/panels/custom_fields.html' %}
-            {% include 'inc/panels/tags.html' %}
             {% plugin_left_page object %}
         </div>
         <div class="col col-md-6">

@@ -17,5 +17,11 @@
     <td>{{ service|linkify:"name" }}</td>
     <td>{{ service.get_protocol_display }}</td>
     <td>{{ service.port_list }}</td>
-    <td>{{ service.description }}</td>
+    <td>
+        {% if service.description %}
+            {{ service.description }}
+        {% else %}
+            No description given
+        {% endif%}
+    </td>
 </tr>
