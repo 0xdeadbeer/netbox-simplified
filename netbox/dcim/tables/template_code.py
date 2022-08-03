@@ -29,6 +29,12 @@ DEVICE_LINK = """
 </a>
 """
 
+PRODUCT_LINK = """
+<a href="{% url 'dcim:product' pk=record.pk %}">
+    {{ record.name|default:'<span class="badge bg-info">Unnamed product</span>' }}
+</a>
+"""
+
 DEVICEBAY_STATUS = """
 {% if record.installed_device_id %}
     <span class="badge bg-{{ record.installed_device.get_status_color }}">

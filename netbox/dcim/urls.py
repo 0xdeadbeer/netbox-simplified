@@ -269,6 +269,18 @@ urlpatterns = [
     path('devices/<int:pk>/lldp-neighbors/', views.DeviceLLDPNeighborsView.as_view(), name='device_lldp_neighbors'),
     path('devices/<int:pk>/config/', views.DeviceConfigView.as_view(), name='device_config'),
 
+    # Products 
+    path('products/', views.ProductListView.as_view(), name='product_list'),
+    path('products/add', views.ProductEditView.as_view(), name='product_add'),
+    path('products/<int:pk>/', views.ProductView.as_view(), name='product'), 
+    path('products/<int:pk>/edit/', views.ProductEditView.as_view(), name='product_edit'), 
+    path('poducts/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'), 
+    path('products/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='product_changelog', kwargs={'model': Product}),
+    # path('products/<int:pk>/journal/', ObjectJournalView.as_view(), name='device_journal', kwargs={'model': Device}),
+    # path('products/<int:pk>/status/', views.DeviceStatusView.as_view(), name='device_status'),
+    # path('products/<int:pk>/lldp-neighbors/', views.DeviceLLDPNeighborsView.as_view(), name='device_lldp_neighbors'),
+    # path('products/<int:pk>/config/', views.DeviceConfigView.as_view(), name='device_config'),
+
     # Modules
     path('modules/', views.ModuleListView.as_view(), name='module_list'),
     path('modules/add/', views.ModuleEditView.as_view(), name='module_add'),

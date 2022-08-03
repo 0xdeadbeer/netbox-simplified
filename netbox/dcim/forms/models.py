@@ -31,6 +31,7 @@ __all__ = (
     'DeviceRoleForm',
     'DeviceTypeForm',
     'DeviceVCMembershipForm',
+    'ProductForm',
     'FrontPortForm',
     'FrontPortTemplateForm',
     'InterfaceForm',
@@ -556,6 +557,10 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         help_text="Operating System running on the device",
         max_length=255
     )
+    products = DynamicModelMultipleChoiceField(
+        queryset=Product.objects.all(),
+        required=False
+    )
 
     class Meta:
         model = Device
@@ -563,7 +568,7 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
             'name', 'device_role', 'device_type', 'serial', 'asset_tag', 'region', 'site_group', 'site', 'rack',
             'location', 'position', 'face', 'status', 'airflow', 'platform', 'primary_ip4', 'primary_ip6',
             'cluster_group', 'cluster', 'tenant_group', 'tenant', 'virtual_chassis', 'vc_position', 'vc_priority',
-            'comments', 'tags', 'local_context_data', 'ip_address', 'url', 'os'
+            'comments', 'tags', 'local_context_data', 'ip_address', 'url', 'os', 'products'
         ]
         help_texts = {
             'device_role': "The function this device serves",
@@ -950,6 +955,29 @@ class DeviceVCMembershipForm(forms.ModelForm):
 
         return vc_position
 
+class ProductForm(TenancyForm, NetBoxModelForm):
+
+    comments = CommentField(
+        label='Comments'
+    )
+    # device = DynamicModelChoiceField(
+    #     queryset=Device.objects.all(),
+    #     required=False
+    # )
+    
+    device = DynamicModelMultipleChoiceField(
+        queryset=Device.objects.all(),
+        required=False
+    )
+
+    class Meta:
+        model = Product
+        fields = [
+            'name', 'comments', 'device'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 class VCMemberSelectForm(BootstrapMixin, forms.Form):
     region = DynamicModelChoiceField(

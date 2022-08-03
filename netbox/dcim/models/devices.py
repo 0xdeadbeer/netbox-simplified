@@ -574,7 +574,7 @@ class Platform(OrganizationalModel):
 
     def get_absolute_url(self):
         return reverse('dcim:platform', args=[self.pk])
-
+ 
 
 class Device(NetBoxModel, ConfigContextModel):
     """
@@ -750,8 +750,7 @@ class Device(NetBoxModel, ConfigContextModel):
         max_length=255,
         default=''
     )
-
-
+    
     objects = ConfigContextModelQuerySet.as_manager()
 
     clone_fields = [

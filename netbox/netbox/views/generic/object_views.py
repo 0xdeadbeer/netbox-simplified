@@ -62,7 +62,7 @@ class ObjectView(BaseObjectView):
             request: The current request
         """
         instance = self.get_object(**kwargs)
-
+        
         return render(request, self.get_template_name(), {
             'object': instance,
             **self.get_extra_context(request, instance),

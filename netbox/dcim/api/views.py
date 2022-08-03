@@ -391,7 +391,7 @@ class PlatformViewSet(NetBoxModelViewSet):
 class DeviceViewSet(ConfigContextQuerySetMixin, NetBoxModelViewSet):
     queryset = Device.objects.prefetch_related(
         'device_type__manufacturer', 'device_role', 'tenant', 'platform', 'site', 'location', 'rack', 'parent_bay',
-        'virtual_chassis__master', 'primary_ip4__nat_outside', 'primary_ip6__nat_outside', 'tags', 'ip_address'
+        'virtual_chassis__master', 'primary_ip4__nat_outside', 'primary_ip6__nat_outside', 'tags', 'products'
     )
     filterset_class = filtersets.DeviceFilterSet
     pagination_class = StripCountAnnotationsPaginator
@@ -542,6 +542,14 @@ class ModuleViewSet(NetBoxModelViewSet):
     serializer_class = serializers.ModuleSerializer
     filterset_class = filtersets.ModuleFilterSet
 
+# 
+# Products
+#
+
+class ProductViewSet(NetBoxModelViewSet): 
+    queryset = Product.objects.all()
+    serializer_class = serializers.ProductSerializer
+    filterset_class = filtersets.ProductFilterSet
 
 #
 # Device components

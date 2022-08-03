@@ -412,7 +412,6 @@ class TagColumn(tables.TemplateColumn):
     def value(self, value):
         return ",".join([tag.name for tag in value.all()])
 
-
 class CustomFieldColumn(tables.Column):
     """
     Display custom fields in the appropriate format.

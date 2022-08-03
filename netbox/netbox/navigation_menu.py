@@ -100,34 +100,6 @@ ORGANIZATION_MENU = Menu(
                 get_model_item('dcim', 'location', 'Locations'),
             ),
         ),
-        MenuGroup(
-            label='Racks',
-            items=(
-                get_model_item('dcim', 'rack', 'Racks'),
-                get_model_item('dcim', 'rackrole', 'Rack Roles'),
-                get_model_item('dcim', 'rackreservation', 'Reservations'),
-                MenuItem(
-                    link='dcim:rack_elevation_list',
-                    link_text='Elevations',
-                    permissions=['dcim.view_rack']
-                ),
-            ),
-        ),
-        MenuGroup(
-            label='Tenancy',
-            items=(
-                get_model_item('tenancy', 'tenant', 'Tenants'),
-                get_model_item('tenancy', 'tenantgroup', 'Tenant Groups'),
-            ),
-        ),
-        MenuGroup(
-            label='Contacts',
-            items=(
-                get_model_item('tenancy', 'contact', 'Contacts'),
-                get_model_item('tenancy', 'contactgroup', 'Contact Groups'),
-                get_model_item('tenancy', 'contactrole', 'Contact Roles'),
-            ),
-        ),
     ),
 )
 
@@ -139,77 +111,9 @@ DEVICES_MENU = Menu(
             label='Devices',
             items=(
                 get_model_item('dcim', 'device', 'Devices'),
-                get_model_item('dcim', 'module', 'Modules'),
                 get_model_item('dcim', 'devicerole', 'Device Roles'),
                 get_model_item('dcim', 'platform', 'Platforms'),
-                get_model_item('dcim', 'virtualchassis', 'Virtual Chassis'),
-            ),
-        ),
-        MenuGroup(
-            label='Device Types',
-            items=(
-                get_model_item('dcim', 'devicetype', 'Device Types'),
-                get_model_item('dcim', 'moduletype', 'Module Types'),
-                get_model_item('dcim', 'manufacturer', 'Manufacturers'),
-            ),
-        ),
-        MenuGroup(
-            label='Device Components',
-            items=(
-                get_model_item('dcim', 'interface', 'Interfaces', actions=['import']),
-                get_model_item('dcim', 'frontport', 'Front Ports', actions=['import']),
-                get_model_item('dcim', 'rearport', 'Rear Ports', actions=['import']),
-                get_model_item('dcim', 'consoleport', 'Console Ports', actions=['import']),
-                get_model_item('dcim', 'consoleserverport', 'Console Server Ports', actions=['import']),
-                get_model_item('dcim', 'powerport', 'Power Ports', actions=['import']),
-                get_model_item('dcim', 'poweroutlet', 'Power Outlets', actions=['import']),
-                get_model_item('dcim', 'modulebay', 'Module Bays', actions=['import']),
-                get_model_item('dcim', 'devicebay', 'Device Bays', actions=['import']),
-                get_model_item('dcim', 'inventoryitem', 'Inventory Items', actions=['import']),
-                get_model_item('dcim', 'inventoryitemrole', 'Inventory Item Roles'),
-            ),
-        ),
-    ),
-)
-
-CONNECTIONS_MENU = Menu(
-    label='Connections',
-    icon_class='mdi mdi-ethernet',
-    groups=(
-        MenuGroup(
-            label='Connections',
-            items=(
-                get_model_item('dcim', 'cable', 'Cables', actions=['import']),
-                get_model_item('wireless', 'wirelesslink', 'Wireless Links', actions=['import']),
-                MenuItem(
-                    link='dcim:interface_connections_list',
-                    link_text='Interface Connections',
-                    permissions=['dcim.view_interface']
-                ),
-                MenuItem(
-                    link='dcim:console_connections_list',
-                    link_text='Console Connections',
-                    permissions=['dcim.view_consoleport']
-                ),
-                MenuItem(
-                    link='dcim:power_connections_list',
-                    link_text='Power Connections',
-                    permissions=['dcim.view_powerport']
-                ),
-            ),
-        ),
-    ),
-)
-
-WIRELESS_MENU = Menu(
-    label='Wireless',
-    icon_class='mdi mdi-wifi',
-    groups=(
-        MenuGroup(
-            label='Wireless',
-            items=(
-                get_model_item('wireless', 'wirelesslan', 'Wireless LANs'),
-                get_model_item('wireless', 'wirelesslangroup', 'Wireless LAN Groups'),
+                get_model_item('dcim', 'product', 'Products', ('add'))
             ),
         ),
     ),
@@ -220,109 +124,10 @@ IPAM_MENU = Menu(
     icon_class='mdi mdi-counter',
     groups=(
         MenuGroup(
-            label='IP Addresses',
+            label='Services',
             items=(
-                get_model_item('ipam', 'ipaddress', 'IP Addresses'),
-                get_model_item('ipam', 'iprange', 'IP Ranges'),
-            ),
-        ),
-        MenuGroup(
-            label='Prefixes',
-            items=(
-                get_model_item('ipam', 'prefix', 'Prefixes'),
-                get_model_item('ipam', 'role', 'Prefix & VLAN Roles'),
-            ),
-        ),
-        MenuGroup(
-            label='ASNs',
-            items=(
-                get_model_item('ipam', 'asn', 'ASNs'),
-            ),
-        ),
-        MenuGroup(
-            label='Aggregates',
-            items=(
-                get_model_item('ipam', 'aggregate', 'Aggregates'),
-                get_model_item('ipam', 'rir', 'RIRs'),
-            ),
-        ),
-        MenuGroup(
-            label='VRFs',
-            items=(
-                get_model_item('ipam', 'vrf', 'VRFs'),
-                get_model_item('ipam', 'routetarget', 'Route Targets'),
-            ),
-        ),
-        MenuGroup(
-            label='VLANs',
-            items=(
-                get_model_item('ipam', 'vlan', 'VLANs'),
-                get_model_item('ipam', 'vlangroup', 'VLAN Groups'),
-            ),
-        ),
-        MenuGroup(
-            label='Other',
-            items=(
-                get_model_item('ipam', 'fhrpgroup', 'FHRP Groups'),
                 get_model_item('ipam', 'servicetemplate', 'Service Templates'),
                 get_model_item('ipam', 'service', 'Services'),
-            ),
-        ),
-    ),
-)
-
-VIRTUALIZATION_MENU = Menu(
-    label='Virtualization',
-    icon_class='mdi mdi-monitor',
-    groups=(
-        MenuGroup(
-            label='Virtual Machines',
-            items=(
-                get_model_item('virtualization', 'virtualmachine', 'Virtual Machines'),
-                get_model_item('virtualization', 'vminterface', 'Interfaces', actions=['import']),
-            ),
-        ),
-        MenuGroup(
-            label='Clusters',
-            items=(
-                get_model_item('virtualization', 'cluster', 'Clusters'),
-                get_model_item('virtualization', 'clustertype', 'Cluster Types'),
-                get_model_item('virtualization', 'clustergroup', 'Cluster Groups'),
-            ),
-        ),
-    ),
-)
-
-CIRCUITS_MENU = Menu(
-    label='Circuits',
-    icon_class='mdi mdi-transit-connection-variant',
-    groups=(
-        MenuGroup(
-            label='Circuits',
-            items=(
-                get_model_item('circuits', 'circuit', 'Circuits'),
-                get_model_item('circuits', 'circuittype', 'Circuit Types'),
-            ),
-        ),
-        MenuGroup(
-            label='Providers',
-            items=(
-                get_model_item('circuits', 'provider', 'Providers'),
-                get_model_item('circuits', 'providernetwork', 'Provider Networks'),
-            ),
-        ),
-    ),
-)
-
-POWER_MENU = Menu(
-    label='Power',
-    icon_class='mdi mdi-flash',
-    groups=(
-        MenuGroup(
-            label='Power',
-            items=(
-                get_model_item('dcim', 'powerfeed', 'Power Feeds'),
-                get_model_item('dcim', 'powerpanel', 'Power Panels'),
             ),
         ),
     ),
@@ -377,12 +182,7 @@ OTHER_MENU = Menu(
 MENUS = [
     ORGANIZATION_MENU,
     DEVICES_MENU,
-    CONNECTIONS_MENU,
-    WIRELESS_MENU,
     IPAM_MENU,
-    VIRTUALIZATION_MENU,
-    CIRCUITS_MENU,
-    POWER_MENU,
     OTHER_MENU,
 ]
 

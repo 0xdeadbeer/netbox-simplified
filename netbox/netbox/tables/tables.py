@@ -139,7 +139,6 @@ class BaseTable(tables.Table):
                 request.user.config.set(f'tables.{table_name}.ordering', ordering, commit=True)
             elif ordering := request.user.config.get(f'tables.{table_name}.ordering'):
                 # If no ordering has been specified, set the preferred ordering (if any).
-                print (ordering)
                 self.order_by = ordering
 
         # Paginate the table results

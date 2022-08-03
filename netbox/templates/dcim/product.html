@@ -1,0 +1,54 @@
+{% extends 'dcim/product/base.html' %}
+{% load render_table from django_tables2 %}
+{% load buttons %}
+{% load static %}
+{% load helpers %}
+{% load plugins %}
+
+{% block content %}
+    <div class="row">
+        <div class="col col-md-6">
+            <div class="card">
+                <h5 class="card-header">
+                    Product
+                </h5>
+                <div class="card-body">
+                    <table class="table table-hover attr-table">
+                        <tr>
+                            <th>Name:</th>
+                            <th>
+                                {% if object.name %}
+                                    {{ object.name }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Comments:</th>
+                            <th>
+                                {% if object.comments %}
+                                    {{ object.comments|markdown }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Device:</th>
+                            <th>
+                                {% if devices %}
+                                    {% for device in devices %}
+                                        {% badge device bg_color="blue" %}
+                                    {% endfor %}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

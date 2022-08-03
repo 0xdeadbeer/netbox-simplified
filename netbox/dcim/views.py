@@ -1609,11 +1609,15 @@ class DeviceView(generic.ObjectView):
         # Services
         services = Service.objects.restrict(request.user, 'view').filter(device=instance)
 
+        # Products
+        products = Product.objects.restrict(request.user, 'view').filter(device=instance)
+
         # ipaddress
         ip_address = Device.objects.restrict(request.user, 'view').filter(ip_address='ip_address')
 
         return {
             'services': services,
+            'products': products,
             'vc_members': vc_members,
             'ip_address': ip_address,
         }
@@ -1832,6 +1836,34 @@ class ModuleBulkDeleteView(generic.BulkDeleteView):
 
 
 #
+# Products 
+#
+
+class ProductListView(generic.ObjectListView): 
+    queryset = Product.objects.all()
+    table = tables.ProductTable
+    template_name = 'dcim/product_list.html'
+
+class ProductEditView(generic.ObjectEditView): 
+    queryset = Product.objects.all()
+    form = forms.ProductForm
+    template_name = 'dcim/product_edit.html'
+
+class ProductView(generic.ObjectView):
+    queryset = Product.objects.all()
+    
+    def get_extra_context(self, request, instance):
+
+        # Devices
+        devices = Device.objects.restrict(request.user, 'view').filter(products=instance)
+        
+        return {
+            'devices': devices,
+        }
+
+class ProductDeleteView(generic.ObjectDeleteView):
+    queryset = Product.objects.all()
+
 # Console ports
 #
 

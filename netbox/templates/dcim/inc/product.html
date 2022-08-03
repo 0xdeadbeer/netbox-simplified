@@ -1,0 +1,19 @@
+<tr>
+    <td class="text-start noprint">
+        {% if perms.dcim.product_delete %}
+            <a href="{% url 'dcim:product_delete' pk=product.pk %}?return_url={{ product.parent.get_absolute_url }}" class="btn btn-danger btn-sm">
+                <i class="mdi mdi-trash-can-outline" title="Delete Product"></i>
+            </a>
+        {% endif %}
+        {% if perms.dcim.product_edit %}
+            <a href="{% url 'dcim:product_edit' pk=product.pk %}?return_url={{ product.parent.get_absolute_url }}" class="btn btn-warning btn-sm" title="Edit Product">
+                <i class="mdi mdi-pencil"></i>
+            </a>
+        {% endif %}
+        <a href="{% url 'dcim:product_changelog' pk=product.pk %}" class="btn btn-sm btn-outline-secondary" title="Change Log">
+            <i class="mdi mdi-history"></i>
+        </a>
+    </td>
+    <td>{{ product|linkify:"name" }}</td>
+    <td>{{ product.comments }}</td>
+</tr>
