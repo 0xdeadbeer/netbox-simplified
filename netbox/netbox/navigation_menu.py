@@ -128,6 +128,7 @@ IPAM_MENU = Menu(
             items=(
                 get_model_item('ipam', 'servicetemplate', 'Service Templates'),
                 get_model_item('ipam', 'service', 'Services'),
+                get_model_item('ipam', 'connection', 'Connections', ('add')),
             ),
         ),
     ),

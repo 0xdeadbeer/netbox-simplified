@@ -29,6 +29,7 @@ __all__ = (
     'VLANFilterForm',
     'VLANGroupFilterForm',
     'VRFFilterForm',
+    'ConnectionFilterForm'
 )
 
 PREFIX_MASK_LENGTH_CHOICES = add_blank_choice([
@@ -475,3 +476,6 @@ class ServiceTemplateFilterForm(NetBoxModelFilterSetForm):
 
 class ServiceFilterForm(ServiceTemplateFilterForm):
     model = Service
+
+class ConnectionFilterForm(NetBoxModelFilterSetForm):
+    model = Connection

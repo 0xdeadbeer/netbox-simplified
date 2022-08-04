@@ -1,0 +1,25 @@
+{% extends 'generic/object_edit.html' %}
+{% load form_helpers %}
+
+{% block form %}
+  <div class="field-group my-5">
+    <div class="row mb-2">
+      <h5 class="offset-sm-3">Connection</h5>
+    </div>
+
+    <div class="tab-content p-0 border-0">
+      <div class="tab-pane" id="custom" role="tabpanel" aria-labeled-by="custom_tab">
+        {% render_field form.name %}
+        {% render_field form.ports %}
+      </div>
+    </div>
+    {% render_field form.comments %}
+  </div>
+
+  {% if form.custom_fields %}
+    <div class="row mb-2">
+      <h5 class="offset-sm-3">Custom Fields</h5>
+    </div>
+    {% render_custom_fields form %}
+  {% endif %}
+{% endblock %}

@@ -1148,3 +1148,29 @@ class ServiceBulkDeleteView(generic.BulkDeleteView):
     queryset = Service.objects.prefetch_related('device', 'virtual_machine')
     filterset = filtersets.ServiceFilterSet
     table = tables.ServiceTable
+
+#
+# Connections
+#
+
+class ConnectionListView(generic.ObjectListView): 
+    queryset = Connection.objects.all()
+    filterset = filtersets.ConnectionFilterSet
+    filterset_form = forms.ConnectionFilterForm
+    table = tables.ConnectionTable
+
+class ConnectionCreateView(generic.ObjectEditView):
+    queryset = Connection.objects.all()
+    form = forms.ConnectionCreateForm
+    template_name = 'ipam/service_create.html'
+
+class ConnectionView(generic.ObjectView):
+    queryset = Connection.objects.all()
+
+class ConnectionEditView(generic.ObjectEditView):
+    queryset = Connection.objects.all()
+    form = forms.ConnectionForm
+    template_name = 'ipam/connection_edit.html'
+
+class ConnectionDeleteView(generic.ObjectDeleteView):
+    queryset = Connection.objects.all()

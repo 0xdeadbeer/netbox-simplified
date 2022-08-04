@@ -435,3 +435,12 @@ class ServiceSerializer(NetBoxModelSerializer):
             'id', 'url', 'display', 'device', 'virtual_machine', 'name', 'ports', 'protocol', 'ipaddresses',
             'description', 'tags', 'custom_fields', 'created', 'last_updated',
         ]
+
+
+class ConnectionSerializer(NetBoxModelSerializer):
+
+    class Meta:
+        model = Connection
+        fields = [
+            'id', 'name', 'protocol', 'port', 'device_from', 'device_to', 'comments'
+        ]

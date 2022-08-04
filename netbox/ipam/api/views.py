@@ -156,6 +156,15 @@ class ServiceViewSet(NetBoxModelViewSet):
     serializer_class = serializers.ServiceSerializer
     filterset_class = filtersets.ServiceFilterSet
 
+#
+# Connections 
+#
+
+class ConnectionViewSet(NetBoxModelViewSet): 
+    queryset = Connection.objects.all()
+    serializer_class = serializers.ConnectionSerializer
+    filterset_class = filtersets.ConnectionFilterSet
+
 
 #
 # Views

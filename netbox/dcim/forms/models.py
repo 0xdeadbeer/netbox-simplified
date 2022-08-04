@@ -542,13 +542,13 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
     ip_address = forms.CharField(
         required=False,
         label='IP Address',
-        help_text="IP Address of this device",
+        help_text="Use a comma to allocate multiple IP Addresses",
         max_length=255,
     )
     url = forms.CharField(
         required=False,
         label='URL',
-        help_text="URL of this device",
+        help_text="Use a comma to allocate multiple URLS",
         max_length=255,
     )
     os = forms.CharField(

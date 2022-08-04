@@ -186,4 +186,12 @@ urlpatterns = [
     path('services/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='service_changelog', kwargs={'model': Service}),
     path('services/<int:pk>/journal/', ObjectJournalView.as_view(), name='service_journal', kwargs={'model': Service}),
 
+    # Connections 
+    path('connections/', views.ConnectionListView.as_view(), name='connection_list'),
+    path('connections/add/', views.ConnectionEditView.as_view(), name='connection_add'),
+    path('connections/<int:pk>/', views.ConnectionView.as_view(), name='connection'), 
+    path('connections/<int:pk>/edit/', views.ConnectionEditView.as_view(), name='connection_edit'), 
+    path('connections/<int:pk>/delete/', views.ConnectionDeleteView.as_view(), name='connection_delete'), 
+    path('connections/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='connection_changelog', kwargs={'model': Connection}),
+
 ]

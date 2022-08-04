@@ -4,6 +4,7 @@ from .vrfs import *
 from .ip import *
 from .services import *
 from .vlans import *
+from .connections import * 
 
 __all__ = (
     'ASN',
@@ -21,4 +22,5 @@ __all__ = (
     'VLAN',
     'VLANGroup',
     'VRF',
+    'Connection'
 )

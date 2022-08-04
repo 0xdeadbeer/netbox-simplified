@@ -1,0 +1,33 @@
+{% extends 'generic/object_edit.html' %}
+{% load form_helpers %}
+
+{% block form %}
+  <div class="field-group my-5">
+    <div class="row mb-2">
+      <h5 class="offset-sm-3">Connection</h5>
+    </div>
+
+    {% render_field form.name %}
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label text-lg-end">Port</label>
+        <div class="col-3">
+            {{ form.protocol }}
+        </div>
+        <div class="col-6">
+            {{ form.port }}
+        </div>
+    </div>
+
+    {% render_field form.device_from %}
+    {% render_field form.device_to %}
+
+    {% render_field form.comments %}
+  </div>
+
+  {% if form.custom_fields %}
+    <div class="row mb-2 my-5">
+      <h5 class="offset-sm-3">Custom Fields</h5>
+    </div>
+    {% render_custom_fields form %}
+  {% endif %}
+{% endblock %}

@@ -45,6 +45,9 @@ router.register('vlans', views.VLANViewSet)
 router.register('service-templates', views.ServiceTemplateViewSet)
 router.register('services', views.ServiceViewSet)
 
+# Connections
+router.register('connections', views.ConnectionViewSet)
+
 app_name = 'ipam-api'
 
 urlpatterns = [

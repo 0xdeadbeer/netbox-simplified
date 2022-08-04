@@ -36,6 +36,8 @@ __all__ = (
     'VLANForm',
     'VLANGroupForm',
     'VRFForm',
+    'ConnectionForm',
+    'ConnectionCreateForm'
 )
 
 
@@ -861,3 +863,53 @@ class ServiceCreateForm(ServiceForm):
                 self.cleaned_data['description'] = service_template.description
         elif not all(self.cleaned_data[f] for f in ('name', 'protocol', 'ports')):
             raise forms.ValidationError("Must specify name, protocol, and port(s) if not using a service template.")
+
+class ConnectionCreateForm(NetBoxModelForm):
+
+    class Meta:
+        fields = [
+            'name', 'protocol', 'ports', 'device_from', 'device_to', 'comments'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super().clean()
+        
+class ConnectionForm(NetBoxModelForm):
+
+    protocol = forms.CharField(
+        required=False,
+        label='Protocol',
+        help_text="Communication protocol in use",
+        max_length=255
+    )
+    port = forms.CharField(
+        required=False,
+        label='Port',
+        help_text="Communication port in use",
+        max_length=255
+    )
+    device_from = DynamicModelMultipleChoiceField(
+        queryset=Device.objects.all(),
+        required=True,
+        label='Source Devices',
+        help_text="Devices from which the connection is going"
+    )
+    device_to = DynamicModelMultipleChoiceField(
+        queryset=Device.objects.all(),
+        required=True,
+        label='Destination Devices',
+        help_text="Devices to which the connection is heading"
+    )
+
+    class Meta:
+        model = Connection
+        fields = [
+            'name', 'protocol', 'port', 'device_from', 'device_to', 'comments'
+        ]
+        help_texts = {}
+        widgets = {
+            # 'protocol': StaticSelect(),
+        }
