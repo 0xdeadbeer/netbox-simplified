@@ -16,6 +16,7 @@ from circuits.models import Circuit
 from extras.views import ObjectConfigContextView
 from ipam.models import ASN, IPAddress, Prefix, Service, VLAN, VLANGroup
 from ipam.tables import AssignedIPAddressesTable, InterfaceVLANTable
+from ipam.models.connections import * 
 from netbox.views import generic
 from utilities.forms import ConfirmationForm
 from utilities.paginator import EnhancedPaginator, get_paginate_count
@@ -1612,12 +1613,16 @@ class DeviceView(generic.ObjectView):
         # Products
         products = Product.objects.restrict(request.user, 'view').filter(device=instance)
 
+        # Connections 
+        connections = Connection.objects.restrict(request.user, 'view').filter(device_from=instance)
+
         # ipaddress
         ip_address = Device.objects.restrict(request.user, 'view').filter(ip_address='ip_address')
 
         return {
             'services': services,
             'products': products,
+            'connections': connections,
             'vc_members': vc_members,
             'ip_address': ip_address,
         }

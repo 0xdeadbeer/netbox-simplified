@@ -36,7 +36,13 @@
                     </tr>
                     <tr>
                         <th scope="row">Ports</th>
-                        <td>{{ object.port_list }}</td>
+                        <td>
+                            {% with object.ports|split:"," as ports %}
+                                {% for port in ports %}
+                                    {% badge port bg_color="orange" %}
+                                {% endfor %}
+                            {% endwith %}
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">IP Addresses</th>

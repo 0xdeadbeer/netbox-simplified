@@ -1,0 +1,19 @@
+<tr>
+    <td class="text-start noprint">
+        {% if perms.ipam.connection_delete %}
+            <a href="{% url 'ipam:connection_delete' pk=connection.pk %}?return_url={{ connection.parent.get_absolute_url }}" class="btn btn-danger btn-sm">
+                <i class="mdi mdi-trash-can-outline" title="Delete Connection"></i>
+            </a>
+        {% endif %}
+        {% if perms.ipam.connection_edit %}
+            <a href="{% url 'ipam:connection_edit' pk=connection.pk %}?return_url={{ connection.parent.get_absolute_url }}" class="btn btn-warning btn-sm" title="Edit Connection">
+                <i class="mdi mdi-pencil"></i>
+            </a>
+        {% endif %}
+        <a href="{% url 'ipam:connection_changelog' pk=connection.pk %}" class="btn btn-sm btn-outline-secondary" title="Change Log">
+            <i class="mdi mdi-history"></i>
+        </a>
+    </td>
+    <td>{{ connection|linkify:"name" }}</td>
+    <td>{{ connection.comments }}</td>
+</tr>

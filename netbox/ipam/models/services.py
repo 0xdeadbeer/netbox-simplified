@@ -21,14 +21,9 @@ class ServiceBase(models.Model):
         max_length=50,
         choices=ServiceProtocolChoices
     )
-    ports = ArrayField(
-        base_field=models.PositiveIntegerField(
-            validators=[
-                MinValueValidator(SERVICE_PORT_MIN),
-                MaxValueValidator(SERVICE_PORT_MAX)
-            ]
-        ),
-        verbose_name='Port numbers'
+    ports = models.CharField(
+        max_length=255,
+        verbose_name='Port numbers',
     )
     description = models.CharField(
         max_length=200,
@@ -43,7 +38,7 @@ class ServiceBase(models.Model):
 
     @property
     def port_list(self):
-        return array_to_string(self.ports)
+        return self.ports
 
 
 class ServiceTemplate(ServiceBase, NetBoxModel):

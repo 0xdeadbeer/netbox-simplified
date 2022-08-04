@@ -908,10 +908,6 @@ class ServiceFilterSet(NetBoxModelFilterSet):
         to_field_name='name',
         label='Virtual machine (name)',
     )
-    port = NumericArrayFilter(
-        field_name='ports',
-        lookup_expr='contains'
-    )
 
     class Meta:
         model = Service

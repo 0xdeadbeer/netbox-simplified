@@ -56,7 +56,11 @@
                                     </a>
                                 <td>
                                     {% if device_from.ip_address %}
-                                        {{ device_from.ip_address }}
+                                        {% with device_from.ip_address|split:"," as ips %}
+                                            {% for ip_address in ips %}
+                                                {% badge ip_address bg_color="orange" %}
+                                            {% endfor %}
+                                        {% endwith %}
                                     {% else %}
                                         {% badge "None" bg_color="red" %}
                                     {% endif %}
@@ -111,16 +115,6 @@
                             {% endif %}
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">Role</th>
-                        <td>
-                            {% if object.device_role %}
-                                {{ object.device_role|linkify }}
-                            {% else %}
-                                None
-                            {% endif %}
-                        </td>
-                    </tr>
                     {% if object.cluster %}
                         <tr>
                             <th>Cluster</th>
@@ -157,8 +151,12 @@
                                         {% badge device_to.name bg_color="blue" %}</td>
                                     </a>
                                 <td>
-                                    {% if device_to.comments %}
-                                        {{ device_to.ip_address }}
+                                    {% if device_to.ip_address %}
+                                        {% with device_to.ip_address|split:"," as ips %}
+                                            {% for ip_address in ips %}
+                                                {% badge ip_address bg_color="orange" %}
+                                            {% endfor %}
+                                        {% endwith %}
                                     {% else %}
                                         {% badge "None" bg_color="red" %}
                                     {% endif %}

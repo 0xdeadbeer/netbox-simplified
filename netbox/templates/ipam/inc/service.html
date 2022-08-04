@@ -16,7 +16,13 @@
     </td>
     <td>{{ service|linkify:"name" }}</td>
     <td>{{ service.get_protocol_display }}</td>
-    <td>{{ service.port_list }}</td>
+    <td>
+        {% with service.ports|split:"," as ports %}
+            {% for port in ports %}
+                {% badge port bg_color="orange" %}
+            {% endfor %}
+        {% endwith %}
+    </td>
     <td>
         {% if service.description %}
             {{ service.description }}

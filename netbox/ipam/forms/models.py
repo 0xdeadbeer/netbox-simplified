@@ -800,13 +800,6 @@ class ServiceForm(NetBoxModelForm):
         queryset=VirtualMachine.objects.all(),
         required=False
     )
-    ports = NumericArrayField(
-        base_field=forms.IntegerField(
-            min_value=SERVICE_PORT_MIN,
-            max_value=SERVICE_PORT_MAX
-        ),
-        help_text="Comma-separated list of one or more port numbers. A range may be specified using a hyphen."
-    )
     ipaddresses = DynamicModelMultipleChoiceField(
         queryset=IPAddress.objects.all(),
         required=False,
