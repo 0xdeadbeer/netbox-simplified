@@ -6,10 +6,10 @@
 
 {% block breadcrumbs %}
   {{ block.super }}
-  {% if object.device %}
-    <li class="breadcrumb-item"><a href="{% url 'ipam:service_list' %}?device_id={{ object.device.pk }}">{{ object.device }}</a></li>
-  {% elif object.virtual_machine %}
-    <li class="breadcrumb-item"><a href="{% url 'ipam:service_list' %}?virtual_machine_id={{ object.virtual_machine.pk }}">{{ object.virtual_machine }}</a></li>
+  {% if object.device_from %}
+    <li class="breadcrumb-item">
+        <a href="{% url 'ipam:connection' pk=object.pk %}">{{ object.name }}</a>
+    </li>
   {% endif %}
 {% endblock %}
 
@@ -33,8 +33,62 @@
                 </table>
             </div>
         </div>
+
+        <div class="card">
+            <h5 class="card-header">
+                Source Devices
+            </h5>
+            <div class="card-body">
+                {% if devices_from %}
+                    <table class="table table-hover">
+                        
+                        <tr>
+                            <th>Commands</th>
+                            <th>Name</th>
+                            <th>Comments</th>
+                        </tr>
+
+                        {% for device_from in devices_from %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'dcim:device' pk=device_from.pk %}">
+                                        {% badge device_from.name bg_color="blue" %}</td>
+                                    </a>
+                                <td>
+                                    {% if device_from.ip_address %}
+                                        {{ device_from.ip_address }}
+                                    {% else %}
+                                        {% badge "None" bg_color="red" %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if device_from.comments %}
+                                        {{ device_from.comments }}
+                                    {% else %}
+                                        {% badge "None" bg_color="red" %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="text-muted">
+                        None
+                    </div>
+                {% endif %}
+            </div>
+            {% if perms.ipam.connection_edit %}
+                <div class="card-footer text-end noprint">
+                    <a href="{% url 'ipam:connection_edit' pk=object.pk %}" class="btn btn-sm btn-primary">
+                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Source Device
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
         {% plugin_left_page object %}
     </div>
+
     <div class="col col-md-6">
 
         <div class="card">
@@ -80,6 +134,58 @@
                     {% endif %}
                 </table>
             </div>
+        </div>
+
+        <div class="card">
+            <h5 class="card-header">
+                Destination Devices
+            </h5>
+            <div class="card-body">
+                {% if devices_to %}
+                    <table class="table table-hover">
+                        
+                        <tr>
+                            <th>Name</th>
+                            <th>IP</th>
+                            <th>Description</th>
+                        </tr>
+
+                        {% for device_to in devices_to %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'dcim:device' pk=device_to.pk %}">
+                                        {% badge device_to.name bg_color="blue" %}</td>
+                                    </a>
+                                <td>
+                                    {% if device_to.comments %}
+                                        {{ device_to.ip_address }}
+                                    {% else %}
+                                        {% badge "None" bg_color="red" %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if device_to.comments %}
+                                        {{ device_to.comments }}
+                                    {% else %}
+                                        {% badge "None" bg_color="red" %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="text-muted">
+                        None
+                    </div>
+                {% endif %}
+            </div>
+            {% if perms.ipam.connection_edit %}
+                <div class="card-footer text-end noprint">
+                    <a href="{% url 'ipam:connection_edit' pk=object.pk %}" class="btn btn-sm btn-primary">
+                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Destination Device
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         {% include 'inc/panels/custom_fields.html' %}

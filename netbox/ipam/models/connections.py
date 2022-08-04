@@ -43,13 +43,13 @@ class Connection(NetBoxModel, ConfigContextModel):
     )
     device_from = models.ManyToManyField (
         to='dcim.Device',
-        related_name='from_services',
+        related_name='from_connections',
         verbose_name='from_device',
         blank=True
     )
     device_to = models.ManyToManyField(
         to='dcim.Device',
-        related_name='to_services',
+        related_name='to_connections',
         verbose_name='to_device',
         blank=True
     )

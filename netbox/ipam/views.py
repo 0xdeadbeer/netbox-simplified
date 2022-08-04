@@ -1167,6 +1167,19 @@ class ConnectionCreateView(generic.ObjectEditView):
 class ConnectionView(generic.ObjectView):
     queryset = Connection.objects.all()
 
+    def get_extra_context(self, request, instance):
+
+        # from devices 
+        devices_from = Device.objects.restrict(request.user, 'view').filter(from_connections=instance)
+        
+        # to devices 
+        devices_to = Device.objects.restrict(request.user, 'view').filter(to_connections=instance)
+
+        return {
+            'devices_from': devices_from, 
+            'devices_to': devices_to 
+        }
+
 class ConnectionEditView(generic.ObjectEditView):
     queryset = Connection.objects.all()
     form = forms.ConnectionForm
