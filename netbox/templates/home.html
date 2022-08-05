@@ -27,7 +27,7 @@
     {# General stats #}
     <div class="row masonry">
       {% for section, items, icon in stats %}
-        <div class="col col-sm-12 col-lg-6 col-xl-4 my-2 masonry-item">
+        <div class="col col-sm-12 col-lg-6 col-xl-6 my-2 masonry-item">
           <div class="card">
             <h6 class="card-header text-center">
               <i class="mdi mdi-{{ icon }}"></i>
@@ -39,7 +39,7 @@
                   {% if not item.disabled %}
                     <a href="{% url item.url %}" class="list-group-item list-group-item-action">
                       <div class="d-flex w-100 justify-content-between align-items-center">
-                        {{ item.label }}
+                        <h6>{{ item.label }}</h6>
                         <h4 class="mb-1">{{ item.count }}</h4>
                       </div>
                     </a>

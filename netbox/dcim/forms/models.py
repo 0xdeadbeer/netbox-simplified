@@ -557,9 +557,9 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         help_text="Operating System running on the device",
         max_length=255
     )
-    products = DynamicModelMultipleChoiceField(
+    products = DynamicModelChoiceField(
         queryset=Product.objects.all(),
-        required=False
+        required=False,
     )
     software = forms.CharField(
         required=False,

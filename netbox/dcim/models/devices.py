@@ -760,7 +760,7 @@ class Device(NetBoxModel, ConfigContextModel):
 
     clone_fields = [
         'device_type', 'device_role', 'tenant', 'platform', 'site', 'location', 'rack', 'status', 'airflow', 'cluster',
-        'ip_address', 'url', 'os', 'software'
+        'ip_address', 'url', 'os', 'software',
     ]
 
     class Meta:
