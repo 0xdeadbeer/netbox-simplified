@@ -4,6 +4,13 @@
         <td>{{ connection|linkify:"name" }}</td>
         <td>{% badge from_device|linkify:"name" bg_color="orange" %}</td>
         <td>{% badge object|linkify:"name" bg_color="blue" %}</td>
+        <td>
+            {% if connection.port %}
+                {{ connection.port }}
+            {% else %}
+                None
+            {% endif %}
+        </td>
     </tr>
 
 {% endfor %}

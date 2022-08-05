@@ -21,6 +21,7 @@
                             <th>Connection</th>
                             <th>From Device</th>
                             <th>To Device</th>
+                            <th>Via Port</th>
                         </tr>
 
                         {% for connection in from_connections %}
@@ -35,7 +36,7 @@
                 </div>
                 {% if perms.ipam.connection_add %}
                 <div class="card-footer text-end noprint">
-                    <a href="{% url 'ipam:connection_add' %}?device_from={{ object.pk }}" class="btn btn-sm btn-primary">
+                    <a href="{% url 'ipam:connection_add' %}?device_to={{ object.pk }}" class="btn btn-sm btn-primary">
                         <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Connection
                     </a>
                 </div>
@@ -58,6 +59,7 @@
                             <th>Connection</th>
                             <th>From Device</th>
                             <th>To Device</th>
+                            <th>Via Port</th>
                         </tr>
 
                         {% for connection in to_connections %}
