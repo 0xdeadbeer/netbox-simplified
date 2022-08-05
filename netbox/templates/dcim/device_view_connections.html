@@ -1,0 +1,90 @@
+{% extends 'dcim/device/base.html' %}
+{% load render_table from django_tables2 %}
+{% load buttons %}
+{% load static %}
+{% load helpers %}
+{% load plugins %}
+
+{% block content %}
+    <div class="row">
+        <div class="col col-md-6">
+
+            <div class="card">
+                <h5 class="card-header">
+                    Connections To {% badge object.name bg_color="blue" %}
+                </h5>
+                <div class="card-body">
+                {% if from_connections %}
+                    <table class="table table-hover">
+                        
+                        <tr>
+                            <th>Connection</th>
+                            <th>From Device</th>
+                            <th>To Device</th>
+                        </tr>
+
+                        {% for connection in from_connections %}
+                            {% include 'dcim/inc/from_connection.html' %}
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="text-muted">
+                        None
+                    </div>
+                {% endif %}
+                </div>
+                {% if perms.ipam.connection_add %}
+                <div class="card-footer text-end noprint">
+                    <a href="{% url 'ipam:connection_add' %}?device_from={{ object.pk }}" class="btn btn-sm btn-primary">
+                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Connection
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            {% plugin_left_page object %}
+        </div>
+        <div class="col col-md-6">
+        
+            <div class="card">
+                <h5 class="card-header">
+                    Connections From {% badge object.name bg_color="blue" %}
+                </h5>
+                <div class="card-body">
+                {% if from_connections %}
+                    <table class="table table-hover">
+                        
+                        <tr>
+                            <th>Connection</th>
+                            <th>From Device</th>
+                            <th>To Device</th>
+                        </tr>
+
+                        {% for connection in to_connections %}
+                            {% include 'dcim/inc/to_connection.html' %}
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <div class="text-muted">
+                        None
+                    </div>
+                {% endif %}
+                </div>
+                {% if perms.ipam.connection_add %}
+                <div class="card-footer text-end noprint">
+                    <a href="{% url 'ipam:connection_add' %}?device_from={{ object.pk }}" class="btn btn-sm btn-primary">
+                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Connection
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% plugin_right_page object %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-md-12">
+            {% plugin_full_width_page object %}
+        </div>
+    </div>
+{% endblock %}

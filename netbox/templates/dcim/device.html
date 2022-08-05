@@ -87,39 +87,6 @@
                 {% endif %}
             </div>
 
-            <div class="card">
-                <h5 class="card-header">
-                    Connections To {% badge object.name bg_color="blue" %}
-                </h5>
-                <div class="card-body">
-                {% if from_connections %}
-                    <table class="table table-hover">
-                        
-                        <tr>
-                            <th>Connection</th>
-                            <th>From Device</th>
-                            <th>To Device</th>
-                        </tr>
-
-                        {% for connection in from_connections %}
-                            {% include 'dcim/inc/from_connection.html' %}
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <div class="text-muted">
-                        None
-                    </div>
-                {% endif %}
-                </div>
-                {% if perms.ipam.connection_add %}
-                <div class="card-footer text-end noprint">
-                    <a href="{% url 'ipam:connection_add' %}?device_from={{ object.pk }}" class="btn btn-sm btn-primary">
-                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Connection
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-
             {% include 'inc/panels/custom_fields.html' %}
             {% plugin_left_page object %}
         </div>
@@ -211,39 +178,6 @@
                 <div class="card-footer text-end noprint">
                     <a href="{% url 'dcim:product_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
                         <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Product
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="card">
-                <h5 class="card-header">
-                    Connections From {% badge object.name bg_color="blue" %}
-                </h5>
-                <div class="card-body">
-                {% if from_connections %}
-                    <table class="table table-hover">
-                        
-                        <tr>
-                            <th>Connection</th>
-                            <th>From Device</th>
-                            <th>To Device</th>
-                        </tr>
-
-                        {% for connection in to_connections %}
-                            {% include 'dcim/inc/to_connection.html' %}
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <div class="text-muted">
-                        None
-                    </div>
-                {% endif %}
-                </div>
-                {% if perms.ipam.connection_add %}
-                <div class="card-footer text-end noprint">
-                    <a href="{% url 'ipam:connection_add' %}?device_from={{ object.pk }}" class="btn btn-sm btn-primary">
-                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Connection
                     </a>
                 </div>
                 {% endif %}

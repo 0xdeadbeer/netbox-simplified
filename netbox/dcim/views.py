@@ -1612,29 +1612,13 @@ class DeviceView(generic.ObjectView):
 
         # Products
         products = Product.objects.restrict(request.user, 'view').filter(device=instance)
-
-        # To connections
-        to_connections = Connection.objects.restrict(request.user, 'view').filter(
-            device_from=instance
-        ).select_related().all()
         
-        # from_connections = connections.device_from.all() 
-
-        # From connections 
-        from_connections = Connection.objects.restrict(request.user, 'view').filter(
-            device_to=instance
-        ).select_related().all()
-        
-        # to_connections = connections.device_to.all()
-
         # ipaddress
         ip_address = Device.objects.restrict(request.user, 'view').filter(ip_address='ip_address')
 
         return {
             'services': services,
             'products': products,
-            'to_connections': to_connections, 
-            'from_connections': from_connections,
             'vc_members': vc_members,
             'ip_address': ip_address,
         }
@@ -1715,6 +1699,27 @@ class DeviceInventoryView(DeviceComponentsView):
     filterset = filtersets.InventoryItemFilterSet
     template_name = 'dcim/device/inventory.html'
 
+class DeviceConnectionsView(generic.ObjectView):
+    queryset = Device.objects.all() 
+    template_name = 'dcim/device_view_connections.html'
+
+    def get_extra_context(self, request, instance):
+        
+        # To connections
+        to_connections = Connection.objects.restrict(request.user, 'view').filter(
+            device_from=instance
+        ).select_related().all()
+        
+        # From connections 
+        from_connections = Connection.objects.restrict(request.user, 'view').filter(
+            device_to=instance
+        ).select_related().all()
+        
+        return {
+            'active_tab': 'view-connections',
+            'to_connections': to_connections, 
+            'from_connections': from_connections,
+        }
 
 class DeviceStatusView(generic.ObjectView):
     additional_permissions = ['dcim.napalm_read_device']
