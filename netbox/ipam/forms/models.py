@@ -872,11 +872,16 @@ class ConnectionCreateForm(NetBoxModelForm):
         
 class ConnectionForm(NetBoxModelForm):
 
-    protocol = forms.CharField(
+    protocol = forms.ChoiceField(
+        choices=(
+            ('TCP', 'TCP'),
+            ('UDP', 'UDP'),
+            ('SCTP', 'SCTP'),
+        ),
         required=False,
+        widget=StaticSelect,
         label='Protocol',
         help_text="Communication protocol in use",
-        max_length=255
     )
     port = forms.CharField(
         required=False,
