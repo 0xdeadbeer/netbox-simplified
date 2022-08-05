@@ -135,7 +135,7 @@ class DeviceType(NetBoxModel):
     )
 
     clone_fields = [
-        'manufacturer', 'u_height', 'is_full_depth', 'subdevice_role', 'airflow',
+        'manufacturer', 'u_height', 'is_full_depth', 'subdevice_role', 'airflow'
     ]
 
     class Meta:
@@ -750,12 +750,17 @@ class Device(NetBoxModel, ConfigContextModel):
         max_length=255,
         default=''
     )
+    software = models.CharField (
+        max_length=255,
+        blank=True, 
+        verbose_name='Software',
+    )
     
     objects = ConfigContextModelQuerySet.as_manager()
 
     clone_fields = [
         'device_type', 'device_role', 'tenant', 'platform', 'site', 'location', 'rack', 'status', 'airflow', 'cluster',
-        'ip_address', 'url', 'os'
+        'ip_address', 'url', 'os', 'software'
     ]
 
     class Meta:

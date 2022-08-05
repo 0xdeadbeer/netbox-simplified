@@ -25,6 +25,20 @@
                             </th>
                         </tr>
                         <tr>
+                            <th>Software:</th>
+                            <th>
+                                {% if object.software %}
+                                    {% with object.software|split:"," as software %}
+                                        {% for program in software %}
+                                            {% badge program bg_color="yellow" %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </th>
+                        </tr>
+                        <tr>
                             <th>Comments:</th>
                             <th>
                                 {% if object.comments %}

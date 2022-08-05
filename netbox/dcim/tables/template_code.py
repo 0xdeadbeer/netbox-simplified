@@ -35,6 +35,14 @@ PRODUCT_LINK = """
 </a>
 """
 
+SOFTWARE_LINK = """
+{% with record.software|split:"," as software %}
+    {% for program in software %}
+        {% badge program bg_color="yellow" %}
+    {% endfor %}
+{% endwith %}
+"""
+
 DEVICEBAY_STATUS = """
 {% if record.installed_device_id %}
     <span class="badge bg-{{ record.installed_device.get_status_color }}">
