@@ -28,7 +28,7 @@ from . import filtersets, forms, tables
 from .choices import DeviceFaceChoices
 from .constants import NONCONNECTABLE_IFACE_TYPES
 from .models import *
-
+from pprint import pprint
 
 class DeviceComponentsView(generic.ObjectChildrenView):
     queryset = Device.objects.all()
@@ -1613,8 +1613,19 @@ class DeviceView(generic.ObjectView):
         # Products
         products = Product.objects.restrict(request.user, 'view').filter(device=instance)
 
-        # Connections 
-        connections = Connection.objects.restrict(request.user, 'view').filter(device_from=instance)
+        # To connections
+        to_connections = Connection.objects.restrict(request.user, 'view').filter(
+            device_from=instance
+        ).select_related().all()
+        
+        # from_connections = connections.device_from.all() 
+
+        # From connections 
+        from_connections = Connection.objects.restrict(request.user, 'view').filter(
+            device_to=instance
+        ).select_related().all()
+        
+        # to_connections = connections.device_to.all()
 
         # ipaddress
         ip_address = Device.objects.restrict(request.user, 'view').filter(ip_address='ip_address')
@@ -1622,7 +1633,8 @@ class DeviceView(generic.ObjectView):
         return {
             'services': services,
             'products': products,
-            'connections': connections,
+            'to_connections': to_connections, 
+            'from_connections': from_connections,
             'vc_members': vc_members,
             'ip_address': ip_address,
         }
