@@ -6,3 +6,4 @@ from .power import *
 from .racks import *
 from .sites import *
 from .products import * 
+from .programs import * 

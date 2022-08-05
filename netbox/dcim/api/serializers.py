@@ -636,10 +636,15 @@ class ModuleSerializer(NetBoxModelSerializer):
         ]
 
 class ProductSerializer(NetBoxModelSerializer): 
-    # url = serializers.HyperlinkedIdentityField(view_name='dcim-api:products-detail')
-
     class Meta:
         model = Product
+        fields = [
+            'id', 'name', 'comments'
+        ]
+
+class ProgramSerializer(NetBoxModelSerializer): 
+    class Meta:
+        model = Program
         fields = [
             'id', 'name', 'comments'
         ]

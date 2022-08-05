@@ -39,7 +39,7 @@ def get_interface_state_attribute(record):
 
 
 #
-# Devices
+# Products
 #
 
 class ProductTable(NetBoxTable):

@@ -552,6 +552,15 @@ class ProductViewSet(NetBoxModelViewSet):
     filterset_class = filtersets.ProductFilterSet
 
 #
+# Programs
+#
+
+class ProgramViewSet(NetBoxModelViewSet): 
+    queryset = Program.objects.all()
+    serializer_class = serializers.ProgramSerializer
+    filterset_class = filtersets.ProgramFilterSet
+
+#
 # Device components
 #
 

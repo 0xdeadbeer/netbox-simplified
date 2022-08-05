@@ -36,11 +36,9 @@ PRODUCT_LINK = """
 """
 
 SOFTWARE_LINK = """
-{% with record.software|split:"," as software %}
-    {% for program in software %}
-        {% badge program bg_color="yellow" %}
-    {% endfor %}
-{% endwith %}
+<a href="{% url 'dcim:program' pk=record.pk %}">
+    {{ record.name|default:'<span class="badge bg-info">Unnamed program</span>' }}
+</a>
 """
 
 DEVICEBAY_STATUS = """

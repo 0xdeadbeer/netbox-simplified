@@ -1044,6 +1044,19 @@ class ProductFilterSet(OrganizationalModelFilterSet):
             Q(comments__icontains=value.strip())
         ).distinct()
 
+class ProgramFilterSet(OrganizationalModelFilterSet):
+    class Meta:
+        model = Program
+        fields = ['id', 'name', 'comments']
+
+    def search(self, queryset, name, value):
+        if not value.strip():
+            return queryset
+        return queryset.filter(
+            Q(name__icontains=value.strip()) |
+            Q(comments__icontains=value.strip())
+        ).distinct()
+
 class DeviceComponentFilterSet(django_filters.FilterSet):
     q = django_filters.CharFilter(
         method='search',

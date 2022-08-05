@@ -1,26 +1,14 @@
-from ast import Name
-from collections import OrderedDict
-from ipaddress import ip_address
-
-import yaml
-from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import F, ProtectedError
 from django.urls import reverse
-from django.utils.safestring import mark_safe
 
 from dcim.choices import *
 from dcim.constants import *
 from extras.models import ConfigContextModel
 from extras.querysets import ConfigContextModelQuerySet
-from netbox.config import ConfigItem
-from netbox.models import OrganizationalModel, NetBoxModel
-from utilities.choices import ColorChoices
-from utilities.fields import ColorField, NaturalOrderingField
+from netbox.models import NetBoxModel
+from utilities.fields import NaturalOrderingField
 from .device_components import *
-from .sites import Site
 
 __all__ = (
     'Product',
@@ -75,9 +63,6 @@ class Product(NetBoxModel, ConfigContextModel):
 
     def validate_unique(self, exclude=None):
 
-        # Check for a duplicate name on a device assigned to the same Site and no Tenant. This is necessary
-        # because Django does not consider two NULL fields to be equal, and thus will not trigger a violation
-        # of the uniqueness constraint without manual intervention.
         if self.name:
             if Product.objects.exclude(pk=self.pk).filter(
                     name=self.name,

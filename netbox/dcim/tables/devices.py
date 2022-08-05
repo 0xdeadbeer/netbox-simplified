@@ -205,9 +205,9 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
     os = tables.Column ( 
         verbose_name='OS',
     )
-    software = tables.TemplateColumn(
-        template_code=SOFTWARE_LINK
-    )
+    # software = tables.TemplateColumn(
+    #     template_code=SOFTWARE_LINK
+    # )
 
     class Meta(NetBoxTable.Meta):
         model = Device
@@ -215,11 +215,11 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
             'pk', 'id', 'name', 'status', 'tenant', 'tenant_group', 'device_role', 'manufacturer', 'device_type', 'platform', 'serial',
             'asset_tag', 'site', 'location', 'rack', 'position', 'face', 'primary_ip', 'airflow', 'primary_ip4',
             'primary_ip6', 'cluster', 'virtual_chassis', 'vc_position', 'vc_priority', 'comments', 'contacts', 'tags',
-            'created', 'last_updated', 'ip_address', 'url', 'os', 'software'
+            'created', 'last_updated', 'ip_address', 'url', 'os'
         )
         default_columns = (
             'pk', 'name', 'status', 'tenant', 'site', 'location', 'rack', 'device_role', 'manufacturer', 'device_type',
-            'ip_address', 'url', 'software'
+            'ip_address', 'url'
         )
 
 

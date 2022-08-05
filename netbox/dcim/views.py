@@ -1886,6 +1886,37 @@ class ProductView(generic.ObjectView):
 class ProductDeleteView(generic.ObjectDeleteView):
     queryset = Product.objects.all()
 
+
+#
+# Programs 
+#
+
+class ProgramListView(generic.ObjectListView): 
+    queryset = Program.objects.all()
+    table = tables.ProgramTable
+    template_name = 'dcim/program_list.html'
+
+class ProgramEditView(generic.ObjectEditView): 
+    queryset = Program.objects.all()
+    form = forms.ProgramForm
+    template_name = 'dcim/program_edit.html'
+
+class ProgramView(generic.ObjectView):
+    queryset = Program.objects.all()
+
+    def get_extra_context(self, request, instance):
+
+        # Devices
+        devices = Device.objects.restrict(request.user, 'view').filter(programs=instance)
+        
+        return {
+            'devices': devices,
+        }
+
+
+class ProgramDeleteView(generic.ObjectDeleteView):
+    queryset = Program.objects.all()
+
 # Console ports
 #
 

@@ -1,0 +1,16 @@
+{% extends 'generic/object_edit.html' %}
+{% load form_helpers %}
+
+{% block form %}
+    {% render_errors form %}
+    
+    <div class="field-group my-5">
+      <div class="row mb-2">
+        <h5 class="offset-sm-3">Program</h5>
+      </div>
+      {% render_field form.name %}
+      {% render_field form.comments %}
+      {% render_field form.device %}
+    </div>
+
+{% endblock %}

@@ -32,6 +32,7 @@ __all__ = (
     'DeviceTypeForm',
     'DeviceVCMembershipForm',
     'ProductForm',
+    'ProgramForm',
     'FrontPortForm',
     'FrontPortTemplateForm',
     'InterfaceForm',
@@ -561,10 +562,9 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         queryset=Product.objects.all(),
         required=False,
     )
-    software = forms.CharField(
+    software = DynamicModelChoiceField(
+        queryset=Program.objects.all(), 
         required=False,
-        label='Software',
-        max_length=255
     )
 
     class Meta:
@@ -960,15 +960,15 @@ class DeviceVCMembershipForm(forms.ModelForm):
 
         return vc_position
 
+#
+# Products
+#
+
 class ProductForm(TenancyForm, NetBoxModelForm):
 
     comments = CommentField(
         label='Comments'
     )
-    # device = DynamicModelChoiceField(
-    #     queryset=Device.objects.all(),
-    #     required=False
-    # )
     
     device = DynamicModelMultipleChoiceField(
         queryset=Device.objects.all(),
@@ -983,6 +983,37 @@ class ProductForm(TenancyForm, NetBoxModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+#
+# Programs 
+#
+
+class ProgramForm(TenancyForm, NetBoxModelForm):
+
+    comments = CommentField(
+        label='Comments'
+    )
+    
+    device = DynamicModelMultipleChoiceField(
+        queryset=Device.objects.all(),
+        required=False
+    )
+
+    class Meta:
+        model = Program
+        fields = [
+            'name', 'comments', 'device'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+#
+# Device Stuff
+#
+
 
 class VCMemberSelectForm(BootstrapMixin, forms.Form):
     region = DynamicModelChoiceField(

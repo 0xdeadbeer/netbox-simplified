@@ -1,0 +1,12 @@
+<tr>
+    <td>
+        {% badge device|linkify:"name" bg_color="blue" %}
+    </td>
+    <td>
+        {% if device.comments %}
+            {{ device.comments }}
+        {% else %}
+            None
+        {% endif %}
+    </td>
+</tr>

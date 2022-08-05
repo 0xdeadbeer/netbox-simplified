@@ -42,6 +42,9 @@ router.register('modules', views.ModuleViewSet)
 # Products
 router.register('products', views.ProductViewSet)
 
+# Programs 
+router.register('programs', views.ProgramViewSet)
+
 # Device components
 router.register('console-ports', views.ConsolePortViewSet)
 router.register('console-server-ports', views.ConsoleServerPortViewSet)

@@ -87,22 +87,6 @@ def get_model_buttons(app_label, model_name, actions=('add', 'import')):
 # Nav menus
 #
 
-ORGANIZATION_MENU = Menu(
-    label='Organization',
-    icon_class='mdi mdi-domain',
-    groups=(
-        MenuGroup(
-            label='Sites',
-            items=(
-                get_model_item('dcim', 'site', 'Sites'),
-                get_model_item('dcim', 'region', 'Regions'),
-                get_model_item('dcim', 'sitegroup', 'Site Groups'),
-                get_model_item('dcim', 'location', 'Locations'),
-            ),
-        ),
-    ),
-)
-
 DEVICES_MENU = Menu(
     label='Devices',
     icon_class='mdi mdi-server',
@@ -113,7 +97,8 @@ DEVICES_MENU = Menu(
                 get_model_item('dcim', 'device', 'Devices'),
                 get_model_item('dcim', 'devicerole', 'Device Roles'),
                 get_model_item('dcim', 'platform', 'Platforms'),
-                get_model_item('dcim', 'product', 'Products', ('add'))
+                get_model_item('dcim', 'product', 'Products', ('add')),
+                get_model_item('dcim', 'program', 'Programs', ('add')),
             ),
         ),
     ),
@@ -181,7 +166,6 @@ OTHER_MENU = Menu(
 
 
 MENUS = [
-    ORGANIZATION_MENU,
     DEVICES_MENU,
     IPAM_MENU,
     OTHER_MENU,
