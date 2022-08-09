@@ -23,7 +23,13 @@ Context:
     <nav class="breadcrumb-container px-3" aria-label="breadcrumb">
       <ol class="breadcrumb">
         {% block breadcrumbs %}
-          <li class="breadcrumb-item"><a href="{% url object|viewname:'list' %}">{{ object|meta:'verbose_name_plural'|bettertitle }}</a></li>
+          <li class="breadcrumb-item"><a href="{% url object|viewname:'list' %}">
+            {% if title %}
+              {{ title }}
+            {% else %}
+              {{ object|meta:'verbose_name_plural'|bettertitle }}
+            {% endif %}
+          </a></li>
         {% endblock breadcrumbs %}
       </ol>
     </nav>

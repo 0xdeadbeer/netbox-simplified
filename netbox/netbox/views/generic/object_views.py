@@ -324,6 +324,7 @@ class ObjectEditView(GetReturnURLMixin, BaseObjectView):
         """
         return obj
 
+
     #
     # Request handlers
     #

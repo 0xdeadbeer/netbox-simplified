@@ -496,7 +496,8 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
     )
     device_role = DynamicModelChoiceField(
         queryset=DeviceRole.objects.all(),
-        required=False
+        required=False, 
+        label='Server Roles'
     )
     platform = DynamicModelChoiceField(
         queryset=Platform.objects.all(),
@@ -554,7 +555,7 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
     os = forms.CharField(
         required=False,
         label='Operating System',
-        help_text="Operating System running on the device",
+        help_text="Operating System running on the server",
         max_length=255
     )
     programs = DynamicModelMultipleChoiceField(

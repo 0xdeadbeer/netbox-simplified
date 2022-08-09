@@ -1471,6 +1471,7 @@ class DeviceRoleListView(generic.ObjectListView):
     filterset = filtersets.DeviceRoleFilterSet
     filterset_form = forms.DeviceRoleFilterForm
     table = tables.DeviceRoleTable
+    template_name = 'dcim/device_role_list.html'
 
 
 class DeviceRoleView(generic.ObjectView):
@@ -1493,6 +1494,12 @@ class DeviceRoleView(generic.ObjectView):
 class DeviceRoleEditView(generic.ObjectEditView):
     queryset = DeviceRole.objects.all()
     form = forms.DeviceRoleForm
+    
+    def get_extra_context(self, request, instance):
+        return {
+            'title': 'Server Role'
+        }
+
 
 
 class DeviceRoleDeleteView(generic.ObjectDeleteView):
@@ -1776,6 +1783,11 @@ class DeviceEditView(generic.ObjectEditView):
     form = forms.DeviceForm
     template_name = 'dcim/device_edit.html'
 
+    def get_extra_context(self, request, instance):
+        return {
+            'title': 'Server',
+        }
+
 class DeviceDeleteView(generic.ObjectDeleteView):
     queryset = Device.objects.all()
 
@@ -1809,6 +1821,11 @@ class DeviceBulkEditView(generic.BulkEditView):
     filterset = filtersets.DeviceFilterSet
     table = tables.DeviceTable
     form = forms.DeviceBulkEditForm
+
+    def get_extra_context(self, request, instance):
+        return {
+            'title': 'Server',
+        }
 
 
 class DeviceBulkDeleteView(generic.BulkDeleteView):

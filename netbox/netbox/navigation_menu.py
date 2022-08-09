@@ -88,14 +88,14 @@ def get_model_buttons(app_label, model_name, actions=('add', 'import')):
 #
 
 DEVICES_MENU = Menu(
-    label='Devices',
+    label='Servers',
     icon_class='mdi mdi-server',
     groups=(
         MenuGroup(
-            label='Devices',
+            label='Servers',
             items=(
-                get_model_item('dcim', 'device', 'Devices'),
-                get_model_item('dcim', 'devicerole', 'Device Roles'),
+                get_model_item('dcim', 'device', 'Servers', ('add')),
+                get_model_item('dcim', 'devicerole', 'Server Roles', ('add')),
                 get_model_item('dcim', 'product', 'Products', ('add')),
                 get_model_item('dcim', 'program', 'Programs', ('add')),
             ),
@@ -104,15 +104,15 @@ DEVICES_MENU = Menu(
 )
 
 IPAM_MENU = Menu(
-    label='IPAM',
+    label='Connections',
     icon_class='mdi mdi-counter',
     groups=(
         MenuGroup(
-            label='Services',
+            label='Connections',
             items=(
-                get_model_item('ipam', 'servicetemplate', 'Service Templates'),
-                get_model_item('ipam', 'service', 'Services'),
-                get_model_item('ipam', 'connection', 'Connections', ('add')),
+                get_model_item('ipam', 'service', 'Ports', ('add')),
+                get_model_item('ipam', 'servicetemplate', 'Port templates', ('add')),
+                get_model_item('ipam', 'connection', 'Server Connections', ('add')),
             ),
         ),
     ),

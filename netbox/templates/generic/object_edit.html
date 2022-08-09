@@ -14,7 +14,15 @@ Context:
 {% endcomment %}
 
 {% block title %}
-  {% if object.pk %}Editing {{ object|meta:"verbose_name" }} {{ object }}{% else %}Add a new {{ object|meta:"verbose_name" }}{% endif %}
+  {% if object.pk %}Editing {{ object|meta:"name" }} {{ object }}{% else %}Add a new 
+  
+    {% if title %}
+      {{ title }}
+    {% else %}
+      {{ object|meta:"verbose_name" }}
+    {% endif %}
+  
+  {% endif %}
 {% endblock title %}
 
 {% block tabs %}

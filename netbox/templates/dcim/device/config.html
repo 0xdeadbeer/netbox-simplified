@@ -1,7 +1,7 @@
 {% extends 'dcim/device/base.html' %}
 {% load static %}
 
-{% block title %}{{ object }} - Config{% endblock %}
+{% block title %}Config - Config{% endblock %}
 
 {% block head %}
 <script type="text/javascript" src="{% static 'config.js' %}" onerror="window.location='{% url 'media_failure' %}?filename=config.js'"></script>

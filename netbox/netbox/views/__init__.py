@@ -34,19 +34,19 @@ class HomeView(View):
 
         def build_stats():
             dcim = (
-                ("dcim.view_device", "Devices", Device.objects.restrict(request.user, 'view').count),
-                ("dcim.view_devicerole", "Device Roles", DeviceRole.objects.restrict(request.user, 'view').count),
+                ("dcim.view_device", "Servers", Device.objects.restrict(request.user, 'view').count),
+                ("dcim.view_devicerole", "Server Roles", DeviceRole.objects.restrict(request.user, 'view').count),
                 ("dcim.view_product", "Products", Product.objects.restrict(request.user, 'view').count),
                 ("dcim.view_program", "Programs", Program.objects.restrict(request.user, 'view').count),
             )
             ipam = (
-                ("ipam.view_service", "Services", Service.objects.restrict(request.user, 'view').count),
-                ("ipam.view_servicetemplate", "Service Templates", ServiceTemplate.objects.restrict(request.user, 'view').count),
-                ("ipam.view_connection", "Connections", Connection.objects.restrict(request.user, 'view').count),
+                ("ipam.view_service", "Ports", Service.objects.restrict(request.user, 'view').count),
+                ("ipam.view_servicetemplate", "Port Templates", ServiceTemplate.objects.restrict(request.user, 'view').count),
+                ("ipam.view_connection", "Server Connections", Connection.objects.restrict(request.user, 'view').count),
             )
             sections = (
-                ("IPAM", ipam, "counter"),
                 ("DCIM", dcim, "server"),
+                ("IPAM", ipam, "counter"),
             )
 
             stats = []
