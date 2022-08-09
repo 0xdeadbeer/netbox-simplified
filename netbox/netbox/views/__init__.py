@@ -16,11 +16,9 @@ from packaging import version
 from sentry_sdk import capture_message
 
 from dcim.models import (
-    Device, DeviceRole, Product
+    Device, DeviceRole, Product, Program
 )
-from ipam.models import ( 
-    Service, ServiceTemplate, Connection,
-)
+from ipam.models import Service, ServiceTemplate, Connection
 from extras.models import ObjectChange
 from extras.tables import ObjectChangeTable
 from netbox.constants import SEARCH_MAX_RESULTS
@@ -36,14 +34,15 @@ class HomeView(View):
 
         def build_stats():
             dcim = (
-                ("dcim.device", "Devices", Device.objects.restrict(request.user, 'view').count),
-                ("dcim.devicerole", "Device Roles", DeviceRole.objects.restrict(request.user, 'view').count),
-                ("dcim.product", "Products", Product.objects.restrict(request.user, 'view').count),
+                ("dcim.view_device", "Devices", Device.objects.restrict(request.user, 'view').count),
+                ("dcim.view_devicerole", "Device Roles", DeviceRole.objects.restrict(request.user, 'view').count),
+                ("dcim.view_product", "Products", Product.objects.restrict(request.user, 'view').count),
+                ("dcim.view_program", "Programs", Program.objects.restrict(request.user, 'view').count),
             )
             ipam = (
-                ("ipam.service", "Services", Service.objects.restrict(request.user, 'view').count),
-                ("ipam.servicetemplate", "Service Templates", ServiceTemplate.objects.restrict(request.user, 'view').count),
-                ("ipam.connection", "Connections", Connection.objects.restrict(request.user, 'view').count),
+                ("ipam.view_service", "Services", Service.objects.restrict(request.user, 'view').count),
+                ("ipam.view_servicetemplate", "Service Templates", ServiceTemplate.objects.restrict(request.user, 'view').count),
+                ("ipam.view_connection", "Connections", Connection.objects.restrict(request.user, 'view').count),
             )
             sections = (
                 ("IPAM", ipam, "counter"),
@@ -63,6 +62,7 @@ class HomeView(View):
                         "disabled": True,
                         "icon": icon_class,
                     }
+                    print (request.user)
                     if request.user.has_perm(perm):
                         item["count"] = get_count()
                         item["disabled"] = False

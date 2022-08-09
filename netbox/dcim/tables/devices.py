@@ -196,8 +196,9 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
     tags = columns.TagColumn(
         url_name='dcim:device_list'
     )
-    ip_address = tables.Column (
-        verbose_name='IP Address'
+    ip_address = tables.TemplateColumn (
+        verbose_name='IP Address',
+        template_code=IP_DISPLAY
     )
     url = tables.Column (
         verbose_name='URL',
@@ -205,9 +206,6 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
     os = tables.Column ( 
         verbose_name='OS',
     )
-    # software = tables.TemplateColumn(
-    #     template_code=SOFTWARE_LINK
-    # )
 
     class Meta(NetBoxTable.Meta):
         model = Device

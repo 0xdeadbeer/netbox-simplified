@@ -29,6 +29,14 @@ DEVICE_LINK = """
 </a>
 """
 
+IP_DISPLAY = """
+{% with record.ip_address|split:"," as ips %}
+    {% for ip_address in ips %}
+        {% badge ip_address bg_color="orange" %}
+    {% endfor %}
+{% endwith %}
+"""
+
 PRODUCT_LINK = """
 <a href="{% url 'dcim:product' pk=record.pk %}">
     {{ record.name|default:'<span class="badge bg-info">Unnamed product</span>' }}

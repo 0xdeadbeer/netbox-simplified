@@ -100,9 +100,7 @@
                             <td>
                                 {% with object.ip_address|split:"," as ips %}
                                     {% for ip_address in ips %}
-                                        <a href="{{url}}" title="{{url}}">
-                                            {% badge ip_address bg_color="orange" %}
-                                        </a>
+                                        {% badge ip_address bg_color="orange" %}
                                     {% endfor %}
                                 {% endwith %}
                             </td>
@@ -110,13 +108,17 @@
                         <tr>
                             <th scope="row">URL</th>
                             <td>
-                                {% with object.url|split:"," as urls %}
-                                    {% for url in urls %}
-                                        <a href="{{url}}">
-                                            {% badge url bg_color="blue" %}
-                                        </a>
-                                    {% endfor %}
-                                {% endwith %}
+                                {% if object.url %}
+                                    {% with object.url|split:"," as urls %}
+                                        {% for url in urls %}
+                                            <a href="{{url}}">
+                                                {% badge url bg_color="blue" %}
+                                            </a>
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% else %}
+                                    None 
+                                {% endif %}
                             </td>
                         </tr>
                         <tr>
