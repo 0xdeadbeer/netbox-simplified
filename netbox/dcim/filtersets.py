@@ -916,17 +916,20 @@ class DeviceFilterSet(NetBoxModelFilterSet, TenancyFilterSet, ContactModelFilter
         method='_device_bays',
         label='Has device bays',
     )
-    ip_address = django_filters.BooleanFilter (
-        method='ip_address',
-        label='Has an IP Address'
+    ip_address = django_filters.CharFilter(
+        field_name='ip_address',
+        label='IP Address',
+        lookup_expr='contains'
     )
-    url = django_filters.BooleanFilter ( 
-        method='url',
-        label='Has a URL',
+    url = django_filters.CharFilter(
+        field_name='url',
+        label='URL',
+        lookup_expr='contains'
     )
-    os = django_filters.BooleanFilter (
-        method='os',
-        label='Runs OS'
+    os = django_filters.CharFilter(
+        field_name='os',
+        label='Operating System',
+        lookup_expr='contains'
     )
     programs = django_filters.ModelMultipleChoiceFilter(
         field_name='programs',
@@ -941,18 +944,19 @@ class DeviceFilterSet(NetBoxModelFilterSet, TenancyFilterSet, ContactModelFilter
 
     class Meta:
         model = Device
-        fields = ['id', 'name', 'asset_tag', 'face', 'position', 'airflow', 'vc_position', 'vc_priority', 'ip_address', 'programs', 'products']
+        fields = ['id', 'name', 'asset_tag', 'face', 'position', 'airflow', 'vc_position', 'vc_priority', 'ip_address', 'url', 'os', 'programs', 'products']
 
     def search(self, queryset, name, value):
         if not value.strip():
             return queryset
         return queryset.filter(
             Q(name__icontains=value) |
-            Q(serial__icontains=value.strip()) |
-            Q(inventoryitems__serial__icontains=value.strip()) |
-            Q(asset_tag__icontains=value.strip()) |
-            Q(comments__icontains=value)
+            Q(comments__icontains=value) |
+            Q(ip_address__icontains=value.strip()) |
+            Q(url__icontains=value.strip()) |
+            Q(os__icontains=value.strip())
         ).distinct()
+    
 
     def _has_primary_ip(self, queryset, name, value):
         params = Q(primary_ip4__isnull=False) | Q(primary_ip6__isnull=False)

@@ -513,7 +513,8 @@ class DeviceFilterForm(
 ):
     model = Device
     fieldsets = (
-        ('General', ('q', 'tag', 'status', 'role_id', 'programs', 'products')),
+        ('General', ('q', 'tag', 'status', 'role_id', 'programs', 'products',
+                    'ip_address', 'url', 'os')),
     )
     region_id = DynamicModelMultipleChoiceField(
         queryset=Region.objects.all(),
@@ -652,6 +653,19 @@ class DeviceFilterForm(
         )
     )
     tag = TagFilterField(model)
+    
+    ip_address = forms.CharField(
+        required=False,
+        label='IP Address'
+    )
+    url = forms.CharField(
+        required=False,
+        label='URL'
+    )
+    os = forms.CharField(
+        required=False,
+        label='Operating System'
+    )
     programs = DynamicModelMultipleChoiceField(
         queryset=Program.objects.all(),
         required=False,
