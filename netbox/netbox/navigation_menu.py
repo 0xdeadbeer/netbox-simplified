@@ -96,7 +96,6 @@ DEVICES_MENU = Menu(
             items=(
                 get_model_item('dcim', 'device', 'Devices'),
                 get_model_item('dcim', 'devicerole', 'Device Roles'),
-                get_model_item('dcim', 'platform', 'Platforms'),
                 get_model_item('dcim', 'product', 'Products', ('add')),
                 get_model_item('dcim', 'program', 'Programs', ('add')),
             ),

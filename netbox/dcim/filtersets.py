@@ -928,10 +928,20 @@ class DeviceFilterSet(NetBoxModelFilterSet, TenancyFilterSet, ContactModelFilter
         method='os',
         label='Runs OS'
     )
+    programs = django_filters.ModelMultipleChoiceFilter(
+        field_name='programs',
+        queryset=Program.objects.all(),
+        label='Programs',
+    )
+    products = django_filters.ModelMultipleChoiceFilter(
+        field_name='products',
+        queryset=Product.objects.all(),
+        label='Products',
+    )
 
     class Meta:
         model = Device
-        fields = ['id', 'name', 'asset_tag', 'face', 'position', 'airflow', 'vc_position', 'vc_priority', 'ip_address']
+        fields = ['id', 'name', 'asset_tag', 'face', 'position', 'airflow', 'vc_position', 'vc_priority', 'ip_address', 'programs', 'products']
 
     def search(self, queryset, name, value):
         if not value.strip():

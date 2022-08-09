@@ -513,16 +513,7 @@ class DeviceFilterForm(
 ):
     model = Device
     fieldsets = (
-        (None, ('q', 'tag')),
-        ('Location', ('region_id', 'site_group_id', 'site_id', 'location_id', 'rack_id')),
-        ('Operation', ('status', 'role_id', 'airflow', 'serial', 'asset_tag', 'mac_address')),
-        ('Hardware', ('manufacturer_id', 'device_type_id', 'platform_id')),
-        ('Tenant', ('tenant_group_id', 'tenant_id')),
-        ('Contacts', ('contact', 'contact_role', 'contact_group')),
-        ('Components', (
-            'console_ports', 'console_server_ports', 'power_ports', 'power_outlets', 'interfaces', 'pass_through_ports',
-        )),
-        ('Miscellaneous', ('has_primary_ip', 'virtual_chassis_member', 'local_context_data'))
+        ('General', ('q', 'tag', 'status', 'role_id', 'programs', 'products')),
     )
     region_id = DynamicModelMultipleChoiceField(
         queryset=Region.objects.all(),
@@ -661,6 +652,16 @@ class DeviceFilterForm(
         )
     )
     tag = TagFilterField(model)
+    programs = DynamicModelMultipleChoiceField(
+        queryset=Program.objects.all(),
+        required=False,
+        label='Programs'
+    )
+    products = DynamicModelMultipleChoiceField(
+        queryset=Product.objects.all(),
+        required=False,
+        label='Products'
+    )
 
 
 class ModuleFilterForm(LocalConfigContextFilterForm, TenancyFilterForm, NetBoxModelFilterSetForm):
