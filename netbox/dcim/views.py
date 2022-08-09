@@ -1717,6 +1717,9 @@ class DeviceConnectionsView(generic.ObjectView):
         from_connections = Connection.objects.restrict(request.user, 'view').filter(
             device_to=instance
         ).select_related().all()
+
+        print (to_connections) 
+        print (from_connections)
         
         return {
             'active_tab': 'view-connections',
