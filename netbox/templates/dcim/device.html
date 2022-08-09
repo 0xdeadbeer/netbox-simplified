@@ -27,12 +27,10 @@
                         <tr>
                             <th>Software:</th>
                             <th>
-                                {% if object.software %}
-                                    {% with object.software|split:"," as software %}
-                                        {% for program in software %}
-                                            {% badge program bg_color="yellow" %}
-                                        {% endfor %}
-                                    {% endwith %}
+                                {% if programs %}
+                                    {% for program in programs %}
+                                        {% badge program|linkify:"name" bg_color="yellow" %}
+                                    {% endfor %}
                                 {% else %}
                                     None
                                 {% endif %}

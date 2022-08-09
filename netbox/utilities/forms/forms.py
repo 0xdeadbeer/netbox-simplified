@@ -38,7 +38,6 @@ class BootstrapMixin:
             forms.RadioSelect,
             forms.Select,
             APISelect,
-            APISelectMultiple,
             ClearableFileInput,
             StaticSelect,
         ]

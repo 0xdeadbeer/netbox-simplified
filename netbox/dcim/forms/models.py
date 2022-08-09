@@ -13,7 +13,7 @@ from tenancy.forms import TenancyForm
 from utilities.forms import (
     APISelect, add_blank_choice, BootstrapMixin, ClearableFileInput, CommentField, ContentTypeChoiceField,
     DynamicModelChoiceField, DynamicModelMultipleChoiceField, JSONField, NumericArrayField, SelectWithPK, SmallTextarea,
-    SlugField, StaticSelect, SelectSpeedWidget,
+    SlugField, StaticSelect, SelectSpeedWidget, StaticSelectMultiple
 )
 from virtualization.models import Cluster, ClusterGroup
 from wireless.models import WirelessLAN, WirelessLANGroup
@@ -428,7 +428,6 @@ class PlatformForm(NetBoxModelForm):
             'napalm_args': SmallTextarea(),
         }
 
-
 class DeviceForm(TenancyForm, NetBoxModelForm):
     region = DynamicModelChoiceField(
         queryset=Region.objects.all(),
@@ -558,12 +557,12 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         help_text="Operating System running on the device",
         max_length=255
     )
-    products = DynamicModelChoiceField(
-        queryset=Product.objects.all(),
+    programs = DynamicModelMultipleChoiceField(
+        queryset=Program.objects.all(),
         required=False,
     )
-    software = DynamicModelChoiceField(
-        queryset=Program.objects.all(), 
+    products = DynamicModelMultipleChoiceField(
+        queryset=Product.objects.all(),
         required=False,
     )
 
@@ -573,7 +572,7 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
             'name', 'device_role', 'device_type', 'serial', 'asset_tag', 'region', 'site_group', 'site', 'rack',
             'location', 'position', 'face', 'status', 'airflow', 'platform', 'primary_ip4', 'primary_ip6',
             'cluster_group', 'cluster', 'tenant_group', 'tenant', 'virtual_chassis', 'vc_position', 'vc_priority',
-            'comments', 'tags', 'local_context_data', 'ip_address', 'url', 'os', 'products', 'software'
+            'comments', 'tags', 'local_context_data', 'ip_address', 'url', 'os', 'programs', 'products'
         ]
         help_texts = {
             'device_role': "The function this device serves",
@@ -594,6 +593,10 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
 
         if self.instance.pk:
 
+            # load the many-to-many values into their appropriate fields
+            self.fields['programs'].initial = self.instance.programs.all().values_list('id', flat=True)
+            self.fields['products'].initial = self.instance.products.all().values_list('id', flat=True)
+            
             # Compile list of choices for primary IPv4 and IPv6 addresses
             for family in [4, 6]:
                 ip_choices = [(None, '---------')]
@@ -646,6 +649,15 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
         if position:
             self.fields['position'].widget.choices = [(position, f'U{position}')]
 
+
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+
+        # Update the reverse many-to-many values 
+        instance.programs.set(self.cleaned_data['programs'])
+        instance.products.set(self.cleaned_data['products'])
+
+        return instance
 
 class ModuleForm(NetBoxModelForm):
     device = DynamicModelChoiceField(

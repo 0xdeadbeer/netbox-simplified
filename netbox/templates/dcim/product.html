@@ -39,7 +39,7 @@
                             <th>
                                 {% if devices %}
                                     {% for device in devices %}
-                                        {% badge device bg_color="blue" %}
+                                        {% badge device|linkify:"name" bg_color="blue" %}
                                     {% endfor %}
                                 {% else %}
                                     None

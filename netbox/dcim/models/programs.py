@@ -41,7 +41,7 @@ class Program(NetBoxModel, ConfigContextModel):
         to='dcim.Device',
         related_name='programs',
         verbose_name='device',
-        blank=True
+        blank=True,
     )
     
     objects = ConfigContextModelQuerySet.as_manager()

@@ -1032,6 +1032,10 @@ class ModuleFilterSet(NetBoxModelFilterSet):
         ).distinct()
 
 class ProductFilterSet(OrganizationalModelFilterSet):
+    q = django_filters.CharFilter(
+        method='search',
+        label='Search',
+    )
     class Meta:
         model = Product
         fields = ['id', 'name', 'comments']
@@ -1040,9 +1044,9 @@ class ProductFilterSet(OrganizationalModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(name__icontains=value.strip()) |
-            Q(comments__icontains=value.strip())
-        ).distinct()
+            Q(name__icontains=value) |
+            Q(name__icontains=name)
+        )
 
 class ProgramFilterSet(OrganizationalModelFilterSet):
     class Meta:

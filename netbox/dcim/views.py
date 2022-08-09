@@ -1,5 +1,4 @@
 from collections import OrderedDict
-
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import EmptyPage, PageNotAnInteger
@@ -1595,7 +1594,7 @@ class DeviceListView(generic.ObjectListView):
 
 class DeviceView(generic.ObjectView):
     queryset = Device.objects.prefetch_related(
-        'site__region', 'location', 'rack', 'tenant__group', 'device_role', 'platform', 'primary_ip4', 'primary_ip6'
+        'site__region', 'location', 'rack', 'tenant__group', 'device_role', 'platform', 'primary_ip4', 'primary_ip6',
     )
 
     def get_extra_context(self, request, instance):
@@ -1610,20 +1609,24 @@ class DeviceView(generic.ObjectView):
         # Services
         services = Service.objects.restrict(request.user, 'view').filter(device=instance)
 
+        # Programs
+        programs = Program.objects.restrict(request.user, 'view').filter(device=instance)
+        
         # Products
         products = Product.objects.restrict(request.user, 'view').filter(device=instance)
+        
         
         # ipaddress
         ip_address = Device.objects.restrict(request.user, 'view').filter(ip_address='ip_address')
 
         return {
             'services': services,
+            'programs': programs, 
             'products': products,
             'vc_members': vc_members,
             'ip_address': ip_address,
         }
-
-
+    
 class DeviceConsolePortsView(DeviceComponentsView):
     child_model = ConsolePort
     table = tables.DeviceConsolePortTable
@@ -1765,16 +1768,13 @@ class DeviceConfigContextView(ObjectConfigContextView):
     queryset = Device.objects.annotate_config_context_data()
     base_template = 'dcim/device/base.html'
 
-
 class DeviceEditView(generic.ObjectEditView):
     queryset = Device.objects.all()
     form = forms.DeviceForm
     template_name = 'dcim/device_edit.html'
 
-
 class DeviceDeleteView(generic.ObjectDeleteView):
     queryset = Device.objects.all()
-
 
 class DeviceBulkImportView(generic.BulkImportView):
     queryset = Device.objects.all()

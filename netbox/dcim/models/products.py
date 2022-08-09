@@ -37,7 +37,7 @@ class Product(NetBoxModel, ConfigContextModel):
         to='dcim.Device',
         related_name='products',
         verbose_name='device',
-        blank=True
+        blank=True,
     )
     
     objects = ConfigContextModelQuerySet.as_manager()
@@ -72,18 +72,3 @@ class Product(NetBoxModel, ConfigContextModel):
                 })
 
         super().validate_unique(exclude)
-
-    def clean(self):
-        super().clean()
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-    @property
-    def identifier(self):
-        """
-        Return the device name if set; otherwise return the Device's primary key as {pk}
-        """
-        if self.name is not None:
-            return self.name
-        return '{{{}}}'.format(self.pk)
