@@ -513,8 +513,9 @@ class DeviceFilterForm(
 ):
     model = Device
     fieldsets = (
-        ('General', ('q', 'tag', 'status', 'role_id', 'programs', 'products',
-                    'ip_address', 'url', 'os')),
+        ('General', ('q', 'tag', 'status', 'role_id', 
+                    'ip_address', 'url', 'os', 
+                    'programs', 'products', )),
     )
     region_id = DynamicModelMultipleChoiceField(
         queryset=Region.objects.all(),
