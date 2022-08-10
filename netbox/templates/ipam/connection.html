@@ -36,7 +36,7 @@
 
         <div class="card">
             <h5 class="card-header">
-                Source Devices
+                {% badge "From" bg_color="white" font_size="20px" %}
             </h5>
             <div class="card-body">
                 {% if devices_from %}
@@ -132,7 +132,7 @@
 
         <div class="card">
             <h5 class="card-header">
-                Destination Devices
+                {% badge "To" bg_color="white" font_size="20px" %}
             </h5>
             <div class="card-body">
                 {% if devices_to %}

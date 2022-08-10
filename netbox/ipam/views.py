@@ -1066,15 +1066,26 @@ class ServiceTemplateListView(generic.ObjectListView):
     filterset = filtersets.ServiceTemplateFilterSet
     filterset_form = forms.ServiceTemplateFilterForm
     table = tables.ServiceTemplateTable
+    template_name = 'ipam/servicetemplate_list.html'
 
 
 class ServiceTemplateView(generic.ObjectView):
     queryset = ServiceTemplate.objects.all()
 
+    def get_extra_context(self, request, instance):
+        return {
+            'title': 'Port template',
+        }
+
 
 class ServiceTemplateEditView(generic.ObjectEditView):
     queryset = ServiceTemplate.objects.all()
     form = forms.ServiceTemplateForm
+    
+    def get_extra_context(self, request, instance):
+        return {
+            'title': 'Port template',
+        }
 
 
 class ServiceTemplateDeleteView(generic.ObjectDeleteView):
@@ -1109,7 +1120,7 @@ class ServiceListView(generic.ObjectListView):
     filterset = filtersets.ServiceFilterSet
     filterset_form = forms.ServiceFilterForm
     table = tables.ServiceTable
-
+    template_name = 'ipam/service_list.html'
 
 class ServiceView(generic.ObjectView):
     queryset = Service.objects.prefetch_related('ipaddresses')
@@ -1158,6 +1169,7 @@ class ConnectionListView(generic.ObjectListView):
     filterset = filtersets.ConnectionFilterSet
     filterset_form = forms.ConnectionFilterForm
     table = tables.ConnectionTable
+    template_name = 'ipam/connection_list.html'
 
 class ConnectionCreateView(generic.ObjectEditView):
     queryset = Connection.objects.all()

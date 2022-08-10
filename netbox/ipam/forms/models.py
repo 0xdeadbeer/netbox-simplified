@@ -775,13 +775,6 @@ class VLANForm(TenancyForm, NetBoxModelForm):
 
 
 class ServiceTemplateForm(NetBoxModelForm):
-    ports = NumericArrayField(
-        base_field=forms.IntegerField(
-            min_value=SERVICE_PORT_MIN,
-            max_value=SERVICE_PORT_MAX
-        ),
-        help_text="Comma-separated list of one or more port numbers. A range may be specified using a hyphen."
-    )
 
     class Meta:
         model = ServiceTemplate
