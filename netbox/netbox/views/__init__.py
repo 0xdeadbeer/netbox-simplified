@@ -62,7 +62,6 @@ class HomeView(View):
                         "disabled": True,
                         "icon": icon_class,
                     }
-                    print (request.user)
                     if request.user.has_perm(perm):
                         item["count"] = get_count()
                         item["disabled"] = False

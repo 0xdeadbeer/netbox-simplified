@@ -921,7 +921,7 @@ class ServiceFilterSet(NetBoxModelFilterSet):
 
 class ConnectionFilterSet(NetBoxModelFilterSet):
     class Meta:
-        model = Service
+        model = Connection
         fields = ['id', 'name']
 
     def search(self, queryset, name, value):
