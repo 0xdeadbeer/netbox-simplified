@@ -18,9 +18,18 @@ class ConnectionTable(NetBoxTable):
     port = tables.TemplateColumn (
         template_code=PORT_TABLE_TEMPLATE
     )
+    device_from = tables.TemplateColumn (
+        verbose_name='Device From',
+        template_code=DEVICE_FROM_DISPLAY
+    )
+    device_to = tables.TemplateColumn (
+        verbose_name='Device to',
+        template_code=DEVICE_TO_DISPLAY
+    )
+
     class Meta(NetBoxTable.Meta):
         model = Connection
         fields = (
-            'pk', 'id', 'name', 'protocol', 'port', 'comments'
+            'pk', 'id', 'name', 'protocol', 'port', 'comments', 'products', 'programs'
         )
-        default_columns = ('pk', 'id', 'name', 'protocol', 'port', 'comments')
+        default_columns = ('pk', 'id', 'name', 'protocol', 'port', 'comments', 'products', 'programs')

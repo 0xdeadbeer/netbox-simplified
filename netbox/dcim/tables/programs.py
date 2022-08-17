@@ -42,14 +42,18 @@ def get_interface_state_attribute(record):
 class ProgramTable(NetBoxTable):
     name = tables.TemplateColumn(
         order_by=('_name',),
-        template_code=SOFTWARE_LINK
+        template_code=PROGRAMS_LINK
+    )
+    devices = tables.TemplateColumn (
+        verbose_name='Devices',
+        template_code=PROGRAMS_DEVICE_DISPLAY
     )
 
     class Meta(NetBoxTable.Meta):
         model = Program
         fields = (
-            'pk', 'id', 'name', 'comments'
+            'pk', 'id', 'name', 'comments', 'devices' 
         )
         default_columns = (
-            'pk', 'name', 'comments'
+            'pk', 'name', 'comments', 'devices'
         )

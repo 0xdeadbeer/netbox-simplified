@@ -161,15 +161,25 @@ class DeviceTable(NetBoxTable):
     os = tables.Column ( 
         verbose_name='OS',
     )
+    products = tables.TemplateColumn (
+        verbose_name='Products',
+        template_code=PRODUCT_DISPLAY
+    )
+    programs = tables.TemplateColumn (
+        verbose_name='Programs',
+        template_code=PROGRAM_DISPLAY
+    )
 
     class Meta(NetBoxTable.Meta):
         model = Device
         fields = (
             'pk', 'id', 'name', 'status', 'device_role', 'comments', 'tags',
-            'created', 'last_updated', 'ip_address', 'url', 'os'
+            'created', 'last_updated', 'ip_address', 'url', 'os', 'products',
+            'programs'
         )
         default_columns = (
-            'pk', 'name', 'status', 'device_role', 'ip_address', 'url', 'os',
+            'pk', 'name', 'status', 'device_role', 'ip_address', 'url', 'os', 'products', 
+            'programs'
         )
 
 

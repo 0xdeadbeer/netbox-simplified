@@ -14,3 +14,23 @@ PORT_TABLE_TEMPLATE = """
         None
     {% endif %}
 """
+
+DEVICE_FROM_DISPLAY = """
+{% for from in record.device_from.all %}
+    {% if from %}
+        {% badge from|linkify bg_color="blue" %}
+    {% else %}
+        None 
+    {% endif %}
+{% endfor %}
+"""
+
+DEVICE_TO_DISPLAY = """
+{% for to in record.device_to.all %}
+    {% if to %}
+        {% badge to|linkify bg_color="blue" %}
+    {% else %}
+        None 
+    {% endif %}
+{% endfor %}
+"""

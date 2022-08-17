@@ -47,12 +47,16 @@ class ProductTable(NetBoxTable):
         order_by=('_name',),
         template_code=PRODUCT_LINK
     )
+    devices = tables.TemplateColumn (
+        verbose_name='Devices',
+        template_code=PRODUCTS_DEVICE_DISPLAY
+    )
 
     class Meta(NetBoxTable.Meta):
         model = Product
         fields = (
-            'pk', 'id', 'name', 'comments'
+            'pk', 'id', 'name', 'comments', 'devices' 
         )
         default_columns = (
-            'pk', 'name', 'comments'
+            'pk', 'name', 'comments', 'devices'
         )

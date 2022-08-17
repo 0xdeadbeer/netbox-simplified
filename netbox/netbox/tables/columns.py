@@ -412,6 +412,29 @@ class TagColumn(tables.TemplateColumn):
     def value(self, value):
         return ",".join([tag.name for tag in value.all()])
 
+class MultiObjectColumn(tables.TemplateColumn):
+    """
+    Display a list of Objects assigned to the object.
+    """
+    template_code = """
+    {% load helpers %}
+    {% for object in value.all %}
+        {% badge object bg_color="orange" %}
+    {% empty %}
+        <span class="text-muted">&mdash;</span>
+    {% endfor %}
+    """
+
+    def __init__(self, url_name=None):
+        super().__init__(
+            orderable=False,
+            template_code=self.template_code,
+            extra_context={'url_name': url_name}
+        )
+
+    def value(self, value):
+        return ",".join([object.name for object in value.all()])
+
 class CustomFieldColumn(tables.Column):
     """
     Display custom fields in the appropriate format.

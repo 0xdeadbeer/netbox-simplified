@@ -37,13 +37,53 @@ IP_DISPLAY = """
 {% endwith %}
 """
 
+PROGRAMS_DEVICE_DISPLAY = """
+{% for device in record.device.all %}
+    {% if device %}
+        {% badge device|linkify bg_color="blue" %}
+    {% else %}
+        None 
+    {% endif %}
+{% endfor %}
+"""
+
+PRODUCTS_DEVICE_DISPLAY = """
+{% for device in record.device.all %}
+    {% if device %}
+        {% badge device|linkify bg_color="blue" %}
+    {% else %}
+        None 
+    {% endif %}
+{% endfor %}
+"""
+
+PRODUCT_DISPLAY = """
+{% for product in record.products.all %}
+    {% if product %}
+        {% badge product|linkify bg_color="yellow" %}
+    {% else %}
+        None 
+    {% endif %}
+{% endfor %}
+"""
+
+PROGRAM_DISPLAY = """
+{% for program in record.programs.all %}
+    {% if program %}
+        {% badge program|linkify bg_color="yellow" %}
+    {% else %}
+        None 
+    {% endif %}
+{% endfor %}
+"""
+
 PRODUCT_LINK = """
 <a href="{% url 'dcim:product' pk=record.pk %}">
     {{ record.name|default:'<span class="badge bg-info">Unnamed product</span>' }}
 </a>
 """
 
-SOFTWARE_LINK = """
+PROGRAMS_LINK = """
 <a href="{% url 'dcim:program' pk=record.pk %}">
     {{ record.name|default:'<span class="badge bg-info">Unnamed program</span>' }}
 </a>
