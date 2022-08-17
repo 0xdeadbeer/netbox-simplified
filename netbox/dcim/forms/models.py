@@ -7,6 +7,7 @@ from timezone_field import TimeZoneFormField
 from dcim.choices import *
 from dcim.constants import *
 from dcim.models import *
+from ipam.models.services import Service
 from ipam.models import ASN, IPAddress, VLAN, VLANGroup, VRF
 from netbox.forms import NetBoxModelForm
 from tenancy.forms import TenancyForm
@@ -28,6 +29,7 @@ __all__ = (
     'DeviceBayForm',
     'DeviceBayTemplateForm',
     'DeviceForm',
+    'DeviceSelectProductsForm',
     'DeviceRoleForm',
     'DeviceTypeForm',
     'DeviceVCMembershipForm',
@@ -656,6 +658,31 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
 
         # Update the reverse many-to-many values 
         instance.programs.set(self.cleaned_data['programs'])
+        instance.products.set(self.cleaned_data['products'])
+
+        return instance
+
+
+class DeviceSelectProductsForm(TenancyForm, NetBoxModelForm):
+    products = DynamicModelMultipleChoiceField(
+        queryset=Product.objects.all(),
+        required=False,
+    )
+
+    class Meta:
+        model = Device
+        fields = ['products']
+        help_texts = {}
+        widgets = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['products'].initial = self.instance.products.all().values_list('id', flat=True)
+            
+    def save(self, *args, **kwargs):
+        instance = super().save(*args, **kwargs)
+
+        # Update the reverse many-to-many values 
         instance.products.set(self.cleaned_data['products'])
 
         return instance

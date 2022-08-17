@@ -1130,12 +1130,24 @@ class ServiceCreateView(generic.ObjectEditView):
     queryset = Service.objects.all()
     form = forms.ServiceCreateForm
     template_name = 'ipam/service_create.html'
+    
+    def get_extra_context(self, request, instance):
+
+        return {
+            'title': 'Creating a port'
+        }
 
 
 class ServiceEditView(generic.ObjectEditView):
     queryset = Service.objects.prefetch_related('ipaddresses')
     form = forms.ServiceForm
     template_name = 'ipam/service_edit.html'
+    
+    def get_extra_context(self, request, instance):
+
+        return {
+            'title': 'Editing a port'
+        }
 
 
 class ServiceDeleteView(generic.ObjectDeleteView):

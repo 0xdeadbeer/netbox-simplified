@@ -1,0 +1,15 @@
+{% extends 'generic/object_edit.html' %}
+{% load form_helpers %}
+
+{% block form %}
+    {% render_errors form %}
+    
+    <div class="field-group my-5">
+      <div class="row mb-2">
+        <h5 class="offset-sm-3">Select Products</h5>
+      </div>
+      {% render_field form.device %}
+      {% render_field form.products %}
+    </div>
+
+{% endblock %}

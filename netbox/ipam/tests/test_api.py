@@ -842,25 +842,25 @@ class ServiceTemplateTest(APIViewTestCases.APIViewTestCase):
     @classmethod
     def setUpTestData(cls):
         service_templates = (
-            ServiceTemplate(name='Service Template 1', protocol=ServiceProtocolChoices.PROTOCOL_TCP, ports=[1, 2]),
-            ServiceTemplate(name='Service Template 2', protocol=ServiceProtocolChoices.PROTOCOL_TCP, ports=[3, 4]),
-            ServiceTemplate(name='Service Template 3', protocol=ServiceProtocolChoices.PROTOCOL_TCP, ports=[5, 6]),
+            ServiceTemplate(name='Port Template 1', protocol=ServiceProtocolChoices.PROTOCOL_TCP, ports=[1, 2]),
+            ServiceTemplate(name='Port Template 2', protocol=ServiceProtocolChoices.PROTOCOL_TCP, ports=[3, 4]),
+            ServiceTemplate(name='Port Template 3', protocol=ServiceProtocolChoices.PROTOCOL_TCP, ports=[5, 6]),
         )
         ServiceTemplate.objects.bulk_create(service_templates)
 
         cls.create_data = [
             {
-                'name': 'Service Template 4',
+                'name': 'Port Template 4',
                 'protocol': ServiceProtocolChoices.PROTOCOL_TCP,
                 'ports': [7, 8],
             },
             {
-                'name': 'Service Template 5',
+                'name': 'Port Template 5',
                 'protocol': ServiceProtocolChoices.PROTOCOL_TCP,
                 'ports': [9, 10],
             },
             {
-                'name': 'Service Template 6',
+                'name': 'Port Template 6',
                 'protocol': ServiceProtocolChoices.PROTOCOL_TCP,
                 'ports': [11, 12],
             },

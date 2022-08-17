@@ -1782,7 +1782,17 @@ class DeviceEditView(generic.ObjectEditView):
 
     def get_extra_context(self, request, instance):
         return {
-            'title': 'Server',
+            'title': 'Editing server',
+        }
+
+class DeviceSelectProducts(generic.ObjectEditView):
+    queryset = Device.objects.all()
+    form = forms.DeviceSelectProductsForm
+    template_name = 'dcim/device_edit_products.html'
+
+    def get_extra_context(self, request, instance):
+        return {
+            'title': 'Selecting products',
         }
 
 class DeviceDeleteView(generic.ObjectDeleteView):
@@ -1821,7 +1831,7 @@ class DeviceBulkEditView(generic.BulkEditView):
 
     def get_extra_context(self, request, instance=""):
         return {
-            'title': 'Server',
+            'title': 'Editing multiple servers',
         }
 
 

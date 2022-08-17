@@ -179,7 +179,6 @@ class DeviceTable(NetBoxTable):
         )
         default_columns = (
             'pk', 'name', 'status', 'device_role', 'ip_address', 'url', 'os', 'products', 
-            'programs'
         )
 
 

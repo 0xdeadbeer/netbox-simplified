@@ -252,6 +252,7 @@ urlpatterns = [
     path('devices/<int:pk>/', views.DeviceView.as_view(), name='device'),
     path('devices/<int:pk>/view-connections/', views.DeviceConnectionsView.as_view(), name='device_view_connections'),
     path('devices/<int:pk>/edit/', views.DeviceEditView.as_view(), name='device_edit'),
+    path('devices/<int:pk>/select/products/', views.DeviceSelectProducts.as_view(), name='device_select_products'),
     path('devices/<int:pk>/delete/', views.DeviceDeleteView.as_view(), name='device_delete'),
     path('devices/<int:pk>/console-ports/', views.DeviceConsolePortsView.as_view(), name='device_consoleports'),
     path('devices/<int:pk>/console-server-ports/', views.DeviceConsoleServerPortsView.as_view(), name='device_consoleserverports'),

@@ -14,14 +14,11 @@ Context:
 {% endcomment %}
 
 {% block title %}
-  {% if object.pk %}Editing {{ object|meta:"name" }} {{ object }}{% else %}Add a new 
-  
-    {% if title %}
+  {% if title %}
       {{ title }}
-    {% else %}
-      {{ object|meta:"verbose_name" }}
-    {% endif %}
-  
+
+  {% else %}
+    Editing '{{ object|meta:"name" }}' {{ object }}
   {% endif %}
 {% endblock title %}
 

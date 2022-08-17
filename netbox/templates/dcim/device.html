@@ -52,7 +52,7 @@
             
             <div class="card">
                 <h5 class="card-header">
-                    Services
+                    Ports
                 </h5>
                 <div class="card-body">
                 {% if services %}
@@ -76,13 +76,13 @@
                     </div>
                 {% endif %}
                 </div>
-                {% if perms.ipam.add_service %}
                 <div class="card-footer text-end noprint">
-                    <a href="{% url 'ipam:service_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
-                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Service
-                    </a>
+                    {% if perms.ipam.add_service %}
+                        <a href="{% url 'ipam:service_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
+                            <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Create Port
+                        </a>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
 
             {% include 'inc/panels/custom_fields.html' %}
@@ -174,13 +174,19 @@
                     </div>
                 {% endif %}
                 </div>
-                {% if perms.dcim.product_add %}
                 <div class="card-footer text-end noprint">
-                    <a href="{% url 'dcim:product_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
-                        <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Add Product
-                    </a>
+                    {% if perms.dcim.device_select_products %}
+                        <a href="{% url 'dcim:device_select_products' object.pk %}" class="btn btn-sm btn-primary">
+                            <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Select Product
+                        </a>
+                    {% endif %}
+
+                    {% if perms.dcim.product_add %}
+                        <a href="{% url 'dcim:product_add' %}?device={{ object.pk }}" class="btn btn-sm btn-primary">
+                            <span class="mdi mdi-plus-thick" aria-hidden="true"></span> Create Product
+                        </a>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
 
             {% if object.powerports.exists and object.poweroutlets.exists %}

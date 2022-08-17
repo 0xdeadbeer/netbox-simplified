@@ -58,23 +58,23 @@ PRODUCTS_DEVICE_DISPLAY = """
 """
 
 PRODUCT_DISPLAY = """
-{% for product in record.products.all %}
-    {% if product %}
+{% if record.products.all %}
+    {% for product in record.products.all %}
         {% badge product|linkify bg_color="yellow" %}
-    {% else %}
-        None 
-    {% endif %}
-{% endfor %}
+    {% endfor %}
+{% else %}
+    None 
+{% endif %}
 """
 
 PROGRAM_DISPLAY = """
-{% for program in record.programs.all %}
-    {% if program %}
+{% if record.programs.all %}
+    {% for program in record.programs.all %}
         {% badge program|linkify bg_color="yellow" %}
-    {% else %}
-        None 
-    {% endif %}
-{% endfor %}
+    {% endfor %}
+{% else %}
+    None 
+{% endif %}
 """
 
 PRODUCT_LINK = """
