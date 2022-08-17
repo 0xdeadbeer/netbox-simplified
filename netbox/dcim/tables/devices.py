@@ -138,61 +138,16 @@ class PlatformTable(NetBoxTable):
 # Devices
 #
 
-class DeviceTable(TenancyColumnsMixin, NetBoxTable):
+class DeviceTable(NetBoxTable):
     name = tables.TemplateColumn(
         order_by=('_name',),
         template_code=DEVICE_LINK
     )
     status = columns.ChoiceFieldColumn()
-    site = tables.Column(
-        linkify=True
-    )
-    location = tables.Column(
-        linkify=True
-    )
-    rack = tables.Column(
-        linkify=True
-    )
     device_role = columns.ColoredLabelColumn(
         verbose_name='Role'
     )
-    manufacturer = tables.Column(
-        accessor=Accessor('device_type__manufacturer'),
-        linkify=True
-    )
-    device_type = tables.Column(
-        linkify=True,
-        verbose_name='Type'
-    )
-    primary_ip = tables.Column(
-        linkify=True,
-        order_by=('primary_ip4', 'primary_ip6'),
-        verbose_name='IP Address'
-    )
-    primary_ip4 = tables.Column(
-        linkify=True,
-        verbose_name='IPv4 Address'
-    )
-    primary_ip6 = tables.Column(
-        linkify=True,
-        verbose_name='IPv6 Address'
-    )
-    cluster = tables.Column(
-        linkify=True
-    )
-    virtual_chassis = tables.Column(
-        linkify=True
-    )
-    vc_position = tables.Column(
-        verbose_name='VC Position'
-    )
-    vc_priority = tables.Column(
-        verbose_name='VC Priority'
-    )
     comments = columns.MarkdownColumn()
-    contacts = columns.ManyToManyColumn(
-        linkify_item=True
-    )
     tags = columns.TagColumn(
         url_name='dcim:device_list'
     )
@@ -210,14 +165,11 @@ class DeviceTable(TenancyColumnsMixin, NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = Device
         fields = (
-            'pk', 'id', 'name', 'status', 'tenant', 'tenant_group', 'device_role', 'manufacturer', 'device_type', 'platform', 'serial',
-            'asset_tag', 'site', 'location', 'rack', 'position', 'face', 'primary_ip', 'airflow', 'primary_ip4',
-            'primary_ip6', 'cluster', 'virtual_chassis', 'vc_position', 'vc_priority', 'comments', 'contacts', 'tags',
+            'pk', 'id', 'name', 'status', 'device_role', 'comments', 'tags',
             'created', 'last_updated', 'ip_address', 'url', 'os'
         )
         default_columns = (
-            'pk', 'name', 'status', 'tenant', 'site', 'location', 'rack', 'device_role', 'manufacturer', 'device_type',
-            'ip_address', 'url'
+            'pk', 'name', 'status', 'device_role', 'ip_address', 'url', 'os',
         )
 
 
