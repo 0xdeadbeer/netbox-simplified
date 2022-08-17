@@ -118,6 +118,24 @@ IPAM_MENU = Menu(
     ),
 )
 
+ADMINISTRATION_MENU = Menu (
+    label='Administration',
+    icon_class='mdi mdi-admin',
+    groups=(
+        # MenuGroup(
+        #     label='Administration',
+        #     items=(
+        #         MenuItem(
+        #             link=f'/',
+        #             link_text='Administration Panel',
+        #             # permissions=[f'{app_label}.view_{model_name}'],
+        #             # buttons=get_model_buttons(app_label, model_name, actions)
+        #         ),
+        #     ),
+        # ),
+    ),
+)
+
 OTHER_MENU = Menu(
     label='Other',
     icon_class='mdi mdi-notification-clear-all',
@@ -167,6 +185,7 @@ OTHER_MENU = Menu(
 MENUS = [
     DEVICES_MENU,
     IPAM_MENU,
+    ADMINISTRATION_MENU,
     OTHER_MENU,
 ]
 
