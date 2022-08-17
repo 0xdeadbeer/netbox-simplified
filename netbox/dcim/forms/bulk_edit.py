@@ -466,15 +466,16 @@ class DeviceBulkEditForm(NetBoxModelBulkEditForm):
         required=False,
         label='Serial Number'
     )
+    ip_address = forms.CharField( 
+        required=False, 
+        label='IP Address'
+    )
 
     model = Device
     fieldsets = (
-        ('Device', ('device_role', 'status', 'tenant', 'platform')),
-        ('Location', ('site', 'location')),
-        ('Hardware', ('manufacturer', 'device_type', 'airflow', 'serial')),
+        ('Device', ('ip_address',)), 
     )
     nullable_fields = (
-        'tenant', 'platform', 'serial', 'airflow',
     )
 
 

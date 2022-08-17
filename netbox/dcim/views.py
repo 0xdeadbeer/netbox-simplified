@@ -1597,7 +1597,7 @@ class DeviceListView(generic.ObjectListView):
     filterset_form = forms.DeviceFilterForm
     table = tables.DeviceTable
     template_name = 'dcim/device_list.html'
-
+    actions = ['add', 'bulk_edit', 'bulk_delete']
 
 class DeviceView(generic.ObjectView):
     queryset = Device.objects.prefetch_related(
@@ -1724,7 +1724,7 @@ class DeviceConnectionsView(generic.ObjectView):
         from_connections = Connection.objects.restrict(request.user, 'view').filter(
             device_to=instance
         ).select_related().all()
-        
+         
         return {
             'active_tab': 'view-connections',
             'to_connections': to_connections, 
@@ -1819,7 +1819,7 @@ class DeviceBulkEditView(generic.BulkEditView):
     table = tables.DeviceTable
     form = forms.DeviceBulkEditForm
 
-    def get_extra_context(self, request, instance):
+    def get_extra_context(self, request, instance=""):
         return {
             'title': 'Server',
         }
