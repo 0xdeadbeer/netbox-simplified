@@ -1780,15 +1780,10 @@ class DeviceEditView(generic.ObjectEditView):
     form = forms.DeviceForm
     template_name = 'dcim/device_edit.html'
 
-    def get_extra_context(self, request, instance):
-        return {
-            'title': 'Editing server',
-        }
-
 class DeviceSelectProducts(generic.ObjectEditView):
     queryset = Device.objects.all()
     form = forms.DeviceSelectProductsForm
-    template_name = 'dcim/device_edit_products.html'
+    template_name = 'dcim/device_select_products.html'
 
     def get_extra_context(self, request, instance):
         return {

@@ -18,7 +18,15 @@ Context:
       {{ title }}
 
   {% else %}
-    Editing '{{ object|meta:"name" }}' {{ object }}
+    {% if object.pk %}
+      {% if object.name %}
+        Editing '{{ object.name }}'
+      {% else %}
+        Editing 'Unnamed'
+      {% endif %}
+    {% else %}
+      Creating 
+    {% endif %}
   {% endif %}
 {% endblock title %}
 
