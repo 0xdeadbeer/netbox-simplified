@@ -17,7 +17,7 @@
       {% render_field form.os %}
       {% render_field form.programs %}
       {% render_field form.products %}
-      {% render_field form.test %}
+      {% render_field form.comments %}
     </div>
     
     {% if form.custom_fields %}
@@ -28,15 +28,5 @@
         {% render_custom_fields form %}
       </div>
     {% endif %}
-
-    <div class="field-group my-5">
-      <h5 class="text-center">Local Config Context Data</h5>
-      {% render_field form.local_context_data %}
-    </div>
-
-    <div class="field-group mb-5">
-      <h5 class="text-center">Comments</h5>
-      {% render_field form.comments %}
-    </div>
 
 {% endblock %}

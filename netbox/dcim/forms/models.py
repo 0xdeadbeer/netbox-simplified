@@ -523,7 +523,10 @@ class DeviceForm(TenancyForm, NetBoxModelForm):
             'group_id': '$cluster_group'
         }
     )
-    comments = CommentField()
+    comments = forms.CharField(
+        required=False, 
+        label='Comments', 
+    )
     local_context_data = JSONField(
         required=False,
         label=''

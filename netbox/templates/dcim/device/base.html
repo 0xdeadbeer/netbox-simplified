@@ -21,11 +21,4 @@
             Connections
         </a>
     </li>
-    {% if perms.extras.view_configcontext %}
-        <li role="presentation" class="nav-item">
-            <a href="{% url 'dcim:device_configcontext' pk=object.pk %}" class="nav-link{% if active_tab == 'config-context' %} active{% endif %}">
-                Config Context
-            </a>
-        </li>
-    {% endif %}
 {% endblock %}
