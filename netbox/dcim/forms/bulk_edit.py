@@ -417,38 +417,8 @@ class PlatformBulkEditForm(NetBoxModelBulkEditForm):
 
 
 class DeviceBulkEditForm(NetBoxModelBulkEditForm):
-    manufacturer = DynamicModelChoiceField(
-        queryset=Manufacturer.objects.all(),
-        required=False
-    )
-    device_type = DynamicModelChoiceField(
-        queryset=DeviceType.objects.all(),
-        required=False,
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
     device_role = DynamicModelChoiceField(
         queryset=DeviceRole.objects.all(),
-        required=False
-    )
-    site = DynamicModelChoiceField(
-        queryset=Site.objects.all(),
-        required=False
-    )
-    location = DynamicModelChoiceField(
-        queryset=Location.objects.all(),
-        required=False,
-        query_params={
-            'site_id': '$site'
-        }
-    )
-    tenant = DynamicModelChoiceField(
-        queryset=Tenant.objects.all(),
-        required=False
-    )
-    platform = DynamicModelChoiceField(
-        queryset=Platform.objects.all(),
         required=False
     )
     status = forms.ChoiceField(
@@ -456,24 +426,31 @@ class DeviceBulkEditForm(NetBoxModelBulkEditForm):
         required=False,
         widget=StaticSelect()
     )
-    airflow = forms.ChoiceField(
-        choices=add_blank_choice(DeviceAirflowChoices),
-        required=False,
-        widget=StaticSelect()
-    )
-    serial = forms.CharField(
-        max_length=50,
-        required=False,
-        label='Serial Number'
-    )
     ip_address = forms.CharField( 
         required=False, 
         label='IP Address'
     )
+    url = forms.CharField ( 
+        required=False, 
+        label='URL'
+    )
+    os = forms.CharField  (
+        required=False, 
+        label='Operating System'
+    )
+    products = DynamicModelMultipleChoiceField(
+        queryset=Product.objects.all(),
+        required=False,
+    )
+    programs = DynamicModelMultipleChoiceField(
+        queryset=Program.objects.all(),
+        required=False,
+    )
+
 
     model = Device
     fieldsets = (
-        ('Device', ('ip_address',)), 
+        ('Device', ('device_role', 'status', 'ip_address', 'url', 'os', 'products', 'programs')), 
     )
     nullable_fields = (
     )

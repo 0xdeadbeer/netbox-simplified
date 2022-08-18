@@ -738,17 +738,20 @@ class Device(NetBoxModel, ConfigContextModel):
     ip_address = models.CharField(
         verbose_name='IP Address',
         max_length=255,
-        default=''
+        default='', 
+        blank=True,
     )
     url = models.CharField (
         verbose_name='URL',
         max_length=255,
-        default=''
+        default='', 
+        blank=True
     )
     os = models.CharField (
         verbose_name='OS',
         max_length=255,
-        default=''
+        default='',
+        blank=True
     )
     
     objects = ConfigContextModelQuerySet.as_manager()

@@ -81,7 +81,7 @@ class NetBoxModelBulkEditForm(BootstrapMixin, CustomFieldsMixin, forms.Form):
 
     pk = forms.ModelMultipleChoiceField(
         queryset=None,  # Set from self.model on init
-        widget=forms.MultipleHiddenInput
+        widget=forms.MultipleHiddenInput,
     )
     add_tags = DynamicModelMultipleChoiceField(
         queryset=Tag.objects.all(),
