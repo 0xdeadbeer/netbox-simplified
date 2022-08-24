@@ -2,13 +2,12 @@
   <img src="https://raw.githubusercontent.com/netbox-community/netbox/develop/docs/netbox_logo.svg" width="400" alt="NetBox logo" />
 </div>
 
-NetBoxSimplified is a side project whose main goal is to make NetBox easier and more family friendly to smaller companies. Comes predefined with some basic settings and encourages the client to customize netbox as much as they want.
+NetBoxSimplified is a side project whose main goal is to make NetBox easier to use inside smaller companies. Comes predefined with some basic settings and encourages the users to customize netbox as much as they want.
 
 
 ### Discussion
 
 * [GitHub Discussions](https://github.com/osamu-kj/NetboxSimplified/discussions) - Discussion forum hosted by GitHub; ideal for Q&A and other structured discussions
-* [Discord Server](https://discord.gg/dH6s5EdP) - Real-time chat hosted by Discord; best for unstructured discussion or just hanging out
 
 ### Installation
 
